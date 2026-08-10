@@ -1,0 +1,17 @@
+{
+  "short_name": "SI Kesantrian",
+  "name": "Sistem Informasi Kesantrian Rumah Al-Qur'an Husnul Khatimah",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1jnTrqDfxmJGN6qkIhB_yIKi2iNAWZvBL",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "scope": "./",
+  "background_color": "#f8fafc",
+  "theme_color": "#059669",
+  "display": "standalone",
+  "orientation": "portrait"
+}
