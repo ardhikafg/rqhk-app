@@ -126,6 +126,17 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-800">
 
+  <!-- GLOBAL LOADING OVERLAY -->
+  <div id="global-loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md hidden transition-opacity duration-200">
+    <div class="bg-white/90 p-6 rounded-3xl shadow-2xl border border-white/80 flex flex-col items-center space-y-3 max-w-xs w-full text-center slide-up">
+      <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-800" id="loading-title">Memproses Data...</h4>
+        <p class="text-[10px] text-slate-500 mt-0.5" id="loading-subtitle">Mohon tunggu sebentar</p>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast-container" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 flex flex-col space-y-2 max-w-sm w-auto pointer-events-none"></div>
 
@@ -188,7 +199,7 @@
   <!-- MAIN APP CONTAINER -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 relative overflow-x-hidden">
 
-    <!-- MOBILE HEADER BAR (FIXED BUG: Moved inside #app-container & replaced hidden with flex md:hidden) -->
+    <!-- MOBILE HEADER BAR (FIXED: Placed inside #app-container with flex md:hidden) -->
     <header id="mobile-header" class="flex md:hidden sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-3 items-center justify-between shadow-xs w-full">
       <div class="flex items-center space-x-2.5">
         <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition active:scale-95">
@@ -554,7 +565,7 @@
             </div>
           </div>
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Tren Kedisiplinan Harian</h4>
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Kedisiplinan Harian</h4>
             <div class="relative h-44 w-full">
               <canvas id="chart-disc-trend"></canvas>
             </div>
@@ -1014,7 +1025,7 @@
       </div>
       <div class="flex space-x-2 pt-2">
         <button onclick="toggleModal('modal-confirm-delete', false)" class="w-1/2 py-2.5 border rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
-        <button id="btn-execute-delete" class="w-1/2 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow">Ya, Hapus</button>
+        <button id="btn-execute-delete" onclick="executeDeleteAction()" class="w-1/2 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow">Ya, Hapus</button>
       </div>
     </div>
   </div>
@@ -1038,7 +1049,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyGkpZNosnCYVh5pWyyio0QL1h17y1Or-OPJOIMBXwbNRuqW70ie2zG-oBXcwecRZR_oA/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyZelfHESenI3lsVQennQ5Zoi5LAfk1XCgWRd88GgVsYLsG2TIQnKVhQpiaudmPRHPlRw/exec";
     const SESSION_KEY = 'rqhk_kesantrian_session_v2';
     const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
 
@@ -1056,6 +1067,7 @@
 
     let tabHistory = ['dashboard'];
     let pendingCancelModalId = null;
+    let pendingDeleteTarget = null;
 
     let tomSelectInstances = {};
 
@@ -1120,6 +1132,20 @@
       }
     }
 
+    function showLoading(title = "Memproses Data...", subtitle = "Mohon tunggu sebentar") {
+      const el = document.getElementById('global-loading-overlay');
+      if (el) {
+        document.getElementById('loading-title').innerText = title;
+        document.getElementById('loading-subtitle').innerText = subtitle;
+        el.classList.remove('hidden');
+      }
+    }
+
+    function hideLoading() {
+      const el = document.getElementById('global-loading-overlay');
+      if (el) el.classList.add('hidden');
+    }
+
     function showToast(title, message, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
@@ -1151,6 +1177,7 @@
     }
 
     function executeGasMethod(methodName, params) {
+      showLoading("Menghubungkan Server...", "Mengirim data ke Google Sheets");
       return new Promise((resolve, reject) => {
         const payload = (typeof params === 'object' && params !== null && !Array.isArray(params))
           ? { action: methodName, ...params }
@@ -1158,8 +1185,8 @@
 
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
-            .withSuccessHandler(res => resolve(res))
-            .withFailureHandler(err => reject(err))
+            .withSuccessHandler(res => { hideLoading(); resolve(res); })
+            .withFailureHandler(err => { hideLoading(); reject(err); })
             [methodName](params);
         } else if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.startsWith("http")) {
           fetch(GAS_WEB_APP_URL, {
@@ -1169,7 +1196,7 @@
             body: JSON.stringify(payload)
           })
           .then(r => r.json())
-          .then(res => resolve(res))
+          .then(res => { hideLoading(); resolve(res); })
           .catch(() => fallbackMockData(methodName, params, resolve, reject));
         } else {
           fallbackMockData(methodName, params, resolve, reject);
@@ -1179,6 +1206,7 @@
 
     function fallbackMockData(methodName, params, resolve, reject) {
       setTimeout(() => {
+        hideLoading();
         try {
           const reqId = (typeof params === 'object' && params !== null) ? (params.id || params.nis || params.idIzin) : params;
 
@@ -1250,15 +1278,28 @@
           } else if (methodName === 'saveSantri') {
             const editId = safeString(params.editIndex);
             if (editId !== "") {
-              mockStorage.santriList[Number(editId)] = {
-                NIS: safeString(params.nis),
-                'Nama Lengkap': params.nama,
-                Angkatan: params.angkatan,
-                Kelas: params.kelas,
-                Alamat: params.alamat,
-                'No HP Orang Tua': params.noHp,
-                Status: 'Aktif'
-              };
+              let idx = mockStorage.santriList.findIndex(s => safeString(s.NIS) === editId);
+              if (idx !== -1) {
+                mockStorage.santriList[idx] = {
+                  NIS: safeString(params.nis),
+                  'Nama Lengkap': params.nama,
+                  Angkatan: params.angkatan,
+                  Kelas: params.kelas,
+                  Alamat: params.alamat,
+                  'No HP Orang Tua': params.noHp,
+                  Status: 'Aktif'
+                };
+              } else {
+                mockStorage.santriList.push({
+                  NIS: safeString(params.nis),
+                  'Nama Lengkap': params.nama,
+                  Angkatan: params.angkatan,
+                  Kelas: params.kelas,
+                  Alamat: params.alamat,
+                  'No HP Orang Tua': params.noHp,
+                  Status: 'Aktif'
+                });
+              }
             } else {
               mockStorage.santriList.push({
                 NIS: safeString(params.nis),
@@ -1389,15 +1430,6 @@
       flatpickr("#m-izn-selesai", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true });
       flatpickr("#m-disc-tanggal", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, defaultDate: new Date() });
       flatpickr("#m-uj-tanggal", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, defaultDate: new Date() });
-    }
-
-    function destroyTomSelects() {
-      Object.keys(tomSelectInstances).forEach(id => {
-        if (tomSelectInstances[id]) {
-          tomSelectInstances[id].destroy();
-          delete tomSelectInstances[id];
-        }
-      });
     }
 
     function refreshTomSelects() {
@@ -1852,7 +1884,7 @@
             </span>
           </div>
         `;
-      }).join('') || '<p class="text-slate-400 text-xs">Belum ada rekam kedisiplinan.</p>';
+      }).join('') || '<p class="text-slate-400 text-xs">Belum ada rekam catatan kedisiplinan.</p>';
     }
 
     function renderCharts() {
@@ -2070,7 +2102,7 @@
               <button onclick="openModalSantri(${idx})" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg transition shadow-2xs">
                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
               </button>
-              <button onclick="askDeleteSantri('${s.NIS}', '${s['Nama Lengkap']}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
+              <button onclick="askDeleteData('santri', '${s.NIS}', '${s['Nama Lengkap']}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             ` : ''}
@@ -2122,7 +2154,7 @@
                 <button onclick="openEditKedisiplinan('${d.ID}')" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg transition shadow-2xs">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                 </button>
-                <button onclick="askDeleteKedisiplinan('${d.ID}', '${santri ? santri['Nama Lengkap'] : d.NIS}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
+                <button onclick="askDeleteData('kedisiplinan', '${d.ID}', '${santri ? santri['Nama Lengkap'] : d.NIS}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               ` : '-'}
@@ -2162,7 +2194,7 @@
                 <button onclick="openEditKeuangan('${u['ID Transaksi'] || u.ID}')" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg transition shadow-2xs">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                 </button>
-                <button onclick="askDeleteKeuangan('${u['ID Transaksi'] || u.ID}', '${santri ? santri['Nama Lengkap'] : (u.NIS || 'Mutasi')}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
+                <button onclick="askDeleteData('keuangan', '${u['ID Transaksi'] || u.ID}', '${santri ? santri['Nama Lengkap'] : (u.NIS || 'Mutasi')}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               ` : '-'}
@@ -2214,7 +2246,7 @@
                     <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
                   </button>
                 ` : ''}
-                <button onclick="askDeletePerizinan('${p['ID Izin'] || p.ID}', '${santri ? santri['Nama Lengkap'] : p.NIS}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
+                <button onclick="askDeleteData('perizinan', '${p['ID Izin'] || p.ID}', '${santri ? santri['Nama Lengkap'] : p.NIS}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition shadow-2xs">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               ` : '-'}
@@ -2233,7 +2265,7 @@
       if (idx !== null && appData.santriList[idx]) {
         const s = appData.santriList[idx];
         document.getElementById('modal-santri-title').innerText = "Edit Data Santri";
-        document.getElementById('m-santri-edit-id').value = idx;
+        document.getElementById('m-santri-edit-id').value = s.NIS;
         document.getElementById('m-santri-nis').value = s.NIS;
         document.getElementById('m-santri-nama').value = s['Nama Lengkap'];
         document.getElementById('m-santri-angkatan').value = s.Angkatan;
@@ -2275,6 +2307,20 @@
       document.getElementById('m-disc-edit-id').value = "";
     }
 
+    function openEditKedisiplinan(id) {
+      const d = appData.pelanggaranList.find(item => safeString(item.ID) === safeString(id));
+      if (!d) return;
+      openModalKedisiplinan();
+      document.getElementById('modal-disc-title').innerText = "Edit Catatan Kedisiplinan";
+      document.getElementById('m-disc-edit-id').value = d.ID;
+      setSelectValue('m-disc-nis', d.NIS);
+      document.getElementById('m-disc-tanggal').value = d.Tanggal;
+      setSelectValue('m-disc-tipe', d.Tipe);
+      document.getElementById('m-disc-kategori').value = d.Kategori;
+      document.getElementById('m-disc-poin').value = d.Poin;
+      document.getElementById('m-disc-ket').value = d.Keterangan;
+    }
+
     async function handleAddKedisiplinan(e) {
       e.preventDefault();
       const formData = {
@@ -2304,6 +2350,20 @@
       document.getElementById('modal-uj-title').innerText = "Input Transaksi Uang Jajan";
       document.getElementById('m-uj-edit-id').value = "";
       setSelectValue('m-uj-jenis', defaultJenis);
+    }
+
+    function openEditKeuangan(id) {
+      const u = appData.uangJajanList.find(item => safeString(item['ID Transaksi'] || item.ID) === safeString(id));
+      if (!u) return;
+      openModalUangJajan();
+      document.getElementById('modal-uj-title').innerText = "Edit Transaksi Keuangan";
+      document.getElementById('m-uj-edit-id').value = u['ID Transaksi'] || u.ID;
+      setSelectValue('m-uj-nis', u.NIS);
+      document.getElementById('m-uj-tanggal').value = u.Tanggal;
+      setSelectValue('m-uj-jenis', u['Jenis Transaksi']);
+      setSelectValue('m-uj-metode', u['Sumber/Metode']);
+      document.getElementById('m-uj-jumlah').value = (Number(u.Jumlah)||0).toLocaleString('id-ID');
+      setSelectValue('m-uj-ket-select', u.Keterangan);
     }
 
     async function handleAddUangJajan(e) {
@@ -2377,6 +2437,316 @@
       toggleModal('modal-perizinan', true);
       document.getElementById('modal-izn-title').innerText = "Pengajuan Izin Santri";
       document.getElementById('m-izn-edit-id').value = "";
+    }
+
+    async function handleAddPerizinan(e) {
+      e.preventDefault();
+      const formData = {
+        editIndex: document.getElementById('m-izn-edit-id').value,
+        nis: document.getElementById('m-izn-nis').value,
+        kategori: document.getElementById('m-izn-kategori').value,
+        mulai: document.getElementById('m-izn-mulai').value,
+        selesai: document.getElementById('m-izn-selesai').value,
+        alasan: document.getElementById('m-izn-alasan').value,
+        diinputOleh: currentUser ? currentUser.nama : "Admin"
+      };
+
+      try {
+        const res = await executeGasMethod('addPerizinan', formData);
+        showToast("Izin Berhasil", res.message, "success");
+        toggleModal('modal-perizinan', false);
+        refreshData();
+      } catch (err) {
+        showToast("Gagal Izin", String(err ? err.message || err : err), "error");
+      }
+    }
+
+    async function updateIzin(idIzin, status) {
+      try {
+        const res = await executeGasMethod('updateStatusIzin', { idIzin, status, diinputOleh: currentUser ? currentUser.nama : "Admin" });
+        showToast("Status Diperbarui", res.message, "success");
+        refreshData();
+      } catch (err) {
+        showToast("Gagal Update", String(err ? err.message || err : err), "error");
+      }
+    }
+
+    function askDeleteData(type, id, labelName) {
+      pendingDeleteTarget = { type, id };
+      document.getElementById('delete-confirm-text').innerText = `Apakah Anda yakin ingin menghapus data "${labelName}" (${id})? Tindakan ini tidak dapat dibatalkan.`;
+      toggleModal('modal-confirm-delete', true);
+    }
+
+    async function executeDeleteAction() {
+      if (!pendingDeleteTarget) return;
+      const { type, id } = pendingDeleteTarget;
+      toggleModal('modal-confirm-delete', false);
+
+      const actionMap = {
+        santri: 'deleteSantri',
+        kedisiplinan: 'deleteKedisiplinan',
+        keuangan: 'deleteKeuangan',
+        perizinan: 'deletePerizinan'
+      };
+
+      try {
+        const res = await executeGasMethod(actionMap[type], id);
+        showToast("Data Dihapus", res.message, "success");
+        refreshData();
+      } catch (err) {
+        showToast("Gagal Hapus", String(err ? err.message || err : err), "error");
+      } finally {
+        pendingDeleteTarget = null;
+      }
+    }
+
+    function previewSantriPDF(nis) {
+      switchTab('laporan');
+      setSelectValue('select-report-santri', nis);
+      onSelectReportSantri(nis);
+    }
+
+    function onSelectReportSantri(nis) {
+      const btnPdf = document.getElementById('btn-download-pdf');
+      const bodyContainer = document.getElementById('pdf-content-body');
+      document.getElementById('report-print-date').innerText = formatDateIndo(new Date());
+
+      if (!nis) {
+        btnPdf.disabled = true;
+        btnPdf.classList.add('opacity-50');
+        bodyContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-400 text-xs">
+            <i data-lucide="file-search" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+            <p class="font-medium">Silakan pilih nama santri di atas untuk menampilkan seluruh informasi & grafik infografis secara otomatis.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      btnPdf.disabled = false;
+      btnPdf.classList.remove('opacity-50');
+
+      const s = appData.santriList.find(item => safeString(item.NIS) === safeString(nis));
+      const saldo = appData.saldoPerSantri[safeString(nis)] || 0;
+      const pelList = appData.pelanggaranList.filter(p => safeString(p.NIS) === safeString(nis));
+      const keuList = appData.uangJajanList.filter(u => safeString(u.NIS) === safeString(nis));
+      const iznList = appData.perizinanList.filter(i => safeString(i.NIS) === safeString(nis));
+
+      const totalPel = pelList.filter(p => p.Tipe === 'Pelanggaran').reduce((a, b) => a + Number(b.Poin||0), 0);
+      const totalPeng = pelList.filter(p => p.Tipe === 'Penghargaan').reduce((a, b) => a + Number(b.Poin||0), 0);
+      const totalSetor = keuList.filter(u => u['Jenis Transaksi'] === 'Setor').reduce((a, b) => a + Number(b.Jumlah||0), 0);
+      const totalTarik = keuList.filter(u => u['Jenis Transaksi'] === 'Tarik').reduce((a, b) => a + Number(b.Jumlah||0), 0);
+
+      bodyContainer.innerHTML = `
+        <div class="space-y-6 text-xs text-slate-800">
+          
+          <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row justify-between gap-4">
+            <div>
+              <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">PROFIL SANTRI</p>
+              <h3 class="text-base font-extrabold text-slate-900">${s ? s['Nama Lengkap'] : nis}</h3>
+              <p class="text-slate-600 mt-0.5">NIS: <span class="font-bold">${nis}</span> | Kelas: <span class="font-bold">${s ? s.Kelas : '-'}</span> | Angkatan: <span class="font-bold">${s ? s.Angkatan : '-'}</span></p>
+            </div>
+            <div class="text-left md:text-right">
+              <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">RINGKASAN TABUNGAN & ORTU</p>
+              <h4 class="text-lg font-black text-emerald-600">Sisa Saldo: Rp ${saldo.toLocaleString('id-ID')}</h4>
+              <p class="text-slate-500">No HP Ortu: ${s ? s['No HP Orang Tua'] : '-'}</p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl space-y-2">
+            <h4 class="font-extrabold text-emerald-900 text-xs flex items-center space-x-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Evaluasi & Catatan Perkembangan Santri</span>
+            </h4>
+            <div class="text-slate-700 text-[11px] leading-relaxed space-y-1">
+              <p>• <strong>Kedisiplinan & Adab:</strong> Ananda mengumpulkan akumulasi poin penghargaan sebesar <strong>+${totalPeng}</strong> dan poin pelanggaran sebesar <strong>-${totalPel}</strong>.</p>
+              <p>• <strong>Pengelolaan Tabungan:</strong> Akumulasi setoran titipan sebesar <strong>Rp ${totalSetor.toLocaleString('id-ID')}</strong> dengan total penggunaan jajan <strong>Rp ${totalTarik.toLocaleString('id-ID')}</strong> (Sisa Saldo: Rp ${saldo.toLocaleString('id-ID')}).</p>
+              <p>• <strong>Aktivitas Perizinan:</strong> Tercatat melakukan pengajuan izin keluar/telpon sebanyak <strong>${iznList.length} kali</strong> permohonan.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-3 bg-emerald-50/50 border border-emerald-100 rounded-xl text-center">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Poin Penghargaan</span>
+              <span class="text-base font-black text-emerald-600">+${totalPeng}</span>
+            </div>
+            <div class="p-3 bg-rose-50/50 border border-rose-100 rounded-xl text-center">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Poin Pelanggaran</span>
+              <span class="text-base font-black text-rose-600">-${totalPel}</span>
+            </div>
+            <div class="p-3 bg-teal-50/50 border border-teal-100 rounded-xl text-center">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Total Titipan Setor</span>
+              <span class="text-base font-black text-teal-600">Rp ${totalSetor.toLocaleString('id-ID')}</span>
+            </div>
+            <div class="p-3 bg-amber-50/50 border border-amber-100 rounded-xl text-center">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Total Penarikan Jajan</span>
+              <span class="text-base font-black text-amber-600">Rp ${totalTarik.toLocaleString('id-ID')}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-50 p-4 border rounded-2xl min-w-0 overflow-hidden">
+              <h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">Rasio Tabungan & Saldo</h5>
+              <div class="h-44 w-full relative">
+                <canvas id="chart-report-financial"></canvas>
+              </div>
+            </div>
+            <div class="bg-slate-50 p-4 border rounded-2xl min-w-0 overflow-hidden">
+              <h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">Grafik Tren Pengeluaran Jajan Harian</h5>
+              <div class="h-44 w-full relative">
+                <canvas id="chart-report-daily-expense"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <h5 class="font-bold text-slate-900 text-xs mb-2 uppercase tracking-wider">1. Riwayat Catatan Kedisiplinan</h5>
+              <div class="overflow-x-auto border rounded-xl">
+                <table class="w-full text-left text-[11px]">
+                  <thead class="bg-slate-100 border-b text-slate-600">
+                    <tr><th class="p-2.5">Tanggal</th><th class="p-2.5">Tipe</th><th class="p-2.5">Kategori</th><th class="p-2.5">Keterangan</th><th class="p-2.5">Diinput Oleh</th><th class="p-2.5 text-right">Poin</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${pelList.map(p => `
+                      <tr>
+                        <td class="p-2.5 whitespace-nowrap">${formatDateIndo(p.Tanggal)}</td>
+                        <td class="p-2.5 font-bold ${p.Tipe==='Pelanggaran'?'text-rose-600':'text-emerald-600'}">${p.Tipe}</td>
+                        <td class="p-2.5">${p.Kategori}</td>
+                        <td class="p-2.5">${p.Keterangan}</td>
+                        <td class="p-2.5 italic text-slate-500">${p['Diinput Oleh']||'-'}</td>
+                        <td class="p-2.5 text-right font-bold">${p.Poin}</td>
+                      </tr>
+                    `).join('') || '<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada riwayat kedisiplinan.</td></tr>'}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h5 class="font-bold text-slate-900 text-xs mb-2 uppercase tracking-wider">2. Transaksi Uang Jajan Terakhir</h5>
+              <div class="overflow-x-auto border rounded-xl">
+                <table class="w-full text-left text-[11px]">
+                  <thead class="bg-slate-100 border-b text-slate-600">
+                    <tr><th class="p-2.5">Tanggal</th><th class="p-2.5">Jenis</th><th class="p-2.5">Metode</th><th class="p-2.5">Nominal</th><th class="p-2.5">Keterangan</th><th class="p-2.5">Diinput Oleh</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${keuList.map(u => `
+                      <tr>
+                        <td class="p-2.5 whitespace-nowrap">${formatDateIndo(u.Tanggal)}</td>
+                        <td class="p-2.5 font-bold ${u['Jenis Transaksi']==='Setor'?'text-emerald-600':'text-rose-600'}">${u['Jenis Transaksi']}</td>
+                        <td class="p-2.5">${u['Sumber/Metode']}</td>
+                        <td class="p-2.5 font-mono font-bold">Rp ${(Number(u.Jumlah)||0).toLocaleString('id-ID')}</td>
+                        <td class="p-2.5">${u.Keterangan||'-'}</td>
+                        <td class="p-2.5 italic text-slate-500">${u['Diinput Oleh']||'-'}</td>
+                      </tr>
+                    `).join('') || '<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada riwayat transaksi.</td></tr>'}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      lucide.createIcons();
+
+      setTimeout(() => {
+        const ctxFin = document.getElementById('chart-report-financial');
+        if (ctxFin) {
+          if (chartReportFinancialInstance) chartReportFinancialInstance.destroy();
+          chartReportFinancialInstance = new Chart(ctxFin.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: [['Total Setor', '(Titipan)'], ['Total Tarik', '(Jajan)'], ['Sisa Saldo', 'Tabungan']],
+              datasets: [{
+                data: [totalSetor, totalTarik, saldo],
+                backgroundColor: ['#10b981', '#f43f5e', '#059669'],
+                borderRadius: 6,
+                maxBarThickness: 32
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: {
+                  ticks: {
+                    callback: function(value) {
+                      if (value >= 1000000) return 'Rp ' + (value/1000000).toFixed(1) + 'Jt';
+                      if (value >= 1000) return 'Rp ' + (value/1000).toFixed(0) + 'rb';
+                      return 'Rp ' + value;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        const ctxDaily = document.getElementById('chart-report-daily-expense');
+        if (ctxDaily) {
+          if (chartReportDailyExpenseInstance) chartReportDailyExpenseInstance.destroy();
+          const dailyMap = {};
+          keuList.filter(u => u['Jenis Transaksi'] === 'Tarik').forEach(u => {
+            const day = (u.Tanggal || '').slice(0, 10) || 'Hari Ini';
+            dailyMap[day] = (dailyMap[day] || 0) + Number(u.Jumlah||0);
+          });
+
+          const dLabels = Object.keys(dailyMap).length ? Object.keys(dailyMap) : ['Hari Ini'];
+          chartReportDailyExpenseInstance = new Chart(ctxDaily.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: dLabels,
+              datasets: [{
+                label: 'Pengeluaran Jajan (Rp)',
+                data: dLabels.map(l => dailyMap[l] || 0),
+                borderColor: '#f43f5e',
+                backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                fill: true,
+                tension: 0.3
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+          });
+        }
+      }, 100);
+    }
+
+    function downloadPDFReport() {
+      const element = document.getElementById('pdf-printable-area');
+      const selectVal = document.getElementById('select-report-santri').value;
+      if (!selectVal) return;
+
+      showLoading("Membentuk PDF...", "Menyiapkan dokumen laporan resmi");
+
+      const opt = {
+        margin: [0.15, 0.15, 0.35, 0.15],
+        filename: `Laporan_Santri_${selectVal}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      html2pdf().set(opt).from(element).toPdf().get('jspdf').then(function(pdf) {
+        const totalPages = pdf.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+          pdf.setPage(i);
+          pdf.setFontSize(8);
+          pdf.setTextColor(150);
+          pdf.text(`Laporan Resmi Kesantrian RQHK | Halaman ${i} dari ${totalPages}`, pdf.internal.pageSize.getWidth() - 0.5, pdf.internal.pageSize.getHeight() - 0.25, { align: 'right' });
+        }
+      }).save().then(() => {
+        hideLoading();
+        showToast("PDF Berhasil Diunduh", "Dokumen laporan telah tersimpan.", "success");
+      }).catch(err => {
+        hideLoading();
+        showToast("Gagal Unduh PDF", String(err), "error");
+      });
     }
 
     window.onload = function() {
