@@ -91,7 +91,6 @@
       box-shadow: 0 10px 20px -8px rgba(5, 150, 105, 0.12);
     }
 
-    /* Premium TomSelect styling without standard browser drop overlays */
     .ts-control {
       border-radius: 0.75rem !important;
       padding: 0.65rem 0.85rem !important;
@@ -126,13 +125,13 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-800">
 
-  <!-- GLOBAL LOADING OVERLAY -->
-  <div id="global-loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md hidden transition-opacity duration-200">
-    <div class="bg-white/90 p-6 rounded-3xl shadow-2xl border border-white/80 flex flex-col items-center space-y-3 max-w-xs w-full text-center slide-up">
-      <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+  <!-- INSTANT MINIMALIST LOADING OVERLAY -->
+  <div id="global-loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md hidden transition-opacity duration-150">
+    <div class="bg-white/95 p-6 rounded-3xl shadow-2xl border border-white flex flex-col items-center space-y-3 max-w-xs w-full text-center slide-up">
+      <div class="w-10 h-10 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
       <div>
-        <h4 class="text-xs font-extrabold text-slate-800" id="loading-title">Memproses Data...</h4>
-        <p class="text-[10px] text-slate-500 mt-0.5" id="loading-subtitle">Mohon tunggu sebentar</p>
+        <h4 class="text-xs font-bold text-slate-800" id="loading-title">Memproses Data...</h4>
+        <p class="text-[10px] text-slate-400 mt-0.5" id="loading-subtitle">Mohon tunggu sebentar</p>
       </div>
     </div>
   </div>
@@ -199,7 +198,7 @@
   <!-- MAIN APP CONTAINER -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 relative overflow-x-hidden">
 
-    <!-- MOBILE HEADER BAR (FIXED: Placed inside #app-container with flex md:hidden) -->
+    <!-- MOBILE HEADER BAR -->
     <header id="mobile-header" class="flex md:hidden sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-3 items-center justify-between shadow-xs w-full">
       <div class="flex items-center space-x-2.5">
         <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition active:scale-95">
@@ -489,7 +488,7 @@
           </div>
         </div>
 
-        <!-- GRAFIK SUB DASHBOARD SANTRI: ASAL DAERAH -->
+        <!-- GRAFIK SUB DASHBOARD SANTRI -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Sebaran Asal Daerah Santri</h4>
           <div class="relative h-48 w-full flex items-center justify-center">
@@ -497,12 +496,24 @@
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-          <div class="relative w-full sm:w-72">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
-            <input type="text" id="search-santri" oninput="filterSantriTable()" placeholder="Cari NIS atau Nama Santri..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+        <!-- FILTER & ACTION BAR SANTRI -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+              <input type="text" id="search-santri" oninput="renderSantriTable()" placeholder="Cari NIS atau Nama..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <select id="filter-santri-kelas" onchange="renderSantriTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="">-- Semua Kelas --</option>
+            </select>
+            <select id="sort-santri" onchange="renderSantriTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="nama-asc">Urutkan: Nama (A - Z)</option>
+              <option value="nama-desc">Urutkan: Nama (Z - A)</option>
+              <option value="nis-asc">Urutkan: NIS (Terkecil)</option>
+              <option value="nis-desc">Urutkan: NIS (Terbesar)</option>
+            </select>
           </div>
-          <button id="btn-add-santri" onclick="openModalSantri()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm">
+          <button id="btn-add-santri" onclick="openModalSantri()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm whitespace-nowrap">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
             <span>Tambah Santri Baru</span>
           </button>
@@ -572,9 +583,25 @@
           </div>
         </div>
 
-        <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-          <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Catatan Kedisiplinan Santri</span>
-          <button id="btn-add-disc" onclick="openModalKedisiplinan()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition shadow-sm">
+        <!-- FILTER & ACTION BAR KEDISIPLINAN -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+              <input type="text" id="search-disc" oninput="renderKedisiplinanTable()" placeholder="Cari Santri / Ket..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <select id="filter-disc-tipe" onchange="renderKedisiplinanTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="">-- Semua Tipe --</option>
+              <option value="Pelanggaran">Pelanggaran</option>
+              <option value="Penghargaan">Penghargaan</option>
+            </select>
+            <select id="sort-disc" onchange="renderKedisiplinanTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+              <option value="poin-desc">Poin: Terbesar -> Terkecil</option>
+            </select>
+          </div>
+          <button id="btn-add-disc" onclick="openModalKedisiplinan()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm whitespace-nowrap">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>Tambah Catatan</span>
           </button>
@@ -624,9 +651,17 @@
           </div>
         </div>
 
-        <!-- GRAFIK LINE CHART SUB DASHBOARD KEUANGAN -->
+        <!-- GRAFIK TREN KEUANGAN HARIAN (DENGAN FILTER BULANAN) -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Transaksi Keuangan Harian</h4>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Grafik Tren Transaksi Keuangan Harian</h4>
+            <div class="flex items-center space-x-2">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase">Filter Bulan:</span>
+              <select id="filter-keuangan-month" onchange="renderCharts()" class="px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none">
+                <option value="ALL">-- Semua Periode --</option>
+              </select>
+            </div>
+          </div>
           <div class="relative h-48 w-full">
             <canvas id="chart-keuangan-daily"></canvas>
           </div>
@@ -651,6 +686,27 @@
             <button id="btn-add-mutasi" onclick="openModalMutasi()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
               Mutasi Dana
             </button>
+          </div>
+        </div>
+
+        <!-- FILTER & ACTION BAR KEUANGAN -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+              <input type="text" id="search-keuangan" oninput="renderKeuanganTable()" placeholder="Cari Santri / Ket..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <select id="filter-keuangan-jenis" onchange="renderKeuanganTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="">-- Semua Jenis Transaksi --</option>
+              <option value="Setor">Setor Uang</option>
+              <option value="Tarik">Tarik / Jajan</option>
+              <option value="Mutasi">Mutasi Musyrif-Cash</option>
+            </select>
+            <select id="sort-keuangan" onchange="renderKeuanganTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+              <option value="nominal-desc">Jumlah: Terbesar -> Terkecil</option>
+            </select>
           </div>
         </div>
 
@@ -704,7 +760,7 @@
           </div>
         </div>
 
-        <!-- GRAFIK LINE CHART SUB DASHBOARD PERIZINAN -->
+        <!-- GRAFIK SUB DASHBOARD PERIZINAN -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Frekuensi Perizinan</h4>
           <div class="relative h-48 w-full">
@@ -712,9 +768,26 @@
           </div>
         </div>
 
-        <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-          <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Kelola Perizinan Santri</span>
-          <button id="btn-add-izin" onclick="openModalPerizinan()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition shadow-sm">
+        <!-- FILTER & ACTION BAR PERIZINAN -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+              <input type="text" id="search-perizinan" oninput="renderPerizinanTable()" placeholder="Cari Santri / Alasan..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <select id="filter-perizinan-status" onchange="renderPerizinanTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="">-- Semua Status --</option>
+              <option value="Disetujui">Disetujui</option>
+              <option value="Pending">Pending</option>
+              <option value="Kembali">Kembali</option>
+              <option value="Ditolak">Ditolak</option>
+            </select>
+            <select id="sort-perizinan" onchange="renderPerizinanTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+            </select>
+          </div>
+          <button id="btn-add-izin" onclick="openModalPerizinan()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm whitespace-nowrap">
             <i data-lucide="file-plus" class="w-4 h-4"></i>
             <span>Buat Izin Baru</span>
           </button>
@@ -876,7 +949,7 @@
     </div>
   </div>
 
-  <!-- MODAL UANG JAJAN -->
+  <!-- MODAL UANG JAJAN (DILENGKAPI SALDO TERKINI OTOMATIS) -->
   <div id="modal-uang-jajan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up">
       <h3 id="modal-uj-title" class="text-sm font-bold text-slate-900 mb-4">Input Transaksi Uang Jajan</h3>
@@ -886,16 +959,22 @@
           <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
           <select id="m-uj-nis" required class="w-full select-santri-options search-select"></select>
         </div>
-        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+
+        <div class="grid grid-cols-3 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
           <div>
             <span class="block text-[10px] text-slate-400 font-medium">NIS Santri</span>
             <input type="text" id="m-uj-display-nis" readonly placeholder="-" class="w-full bg-transparent font-mono font-bold text-slate-700 focus:outline-none">
           </div>
           <div>
             <span class="block text-[10px] text-slate-400 font-medium">Kelas / Program</span>
-            <input type="text" id="m-uj-display-kelas" readonly placeholder="-" class="w-full bg-transparent font-semibold text-slate-700 focus:outline-none">
+            <input type="text" id="m-uj-display-kelas" readonly placeholder="-" class="w-full bg-transparent font-semibold text-slate-700 focus:outline-none truncate">
+          </div>
+          <div>
+            <span class="block text-[10px] text-slate-400 font-medium">Saldo Terkini</span>
+            <input type="text" id="m-uj-display-saldo" readonly placeholder="Rp 0" class="w-full bg-transparent font-mono font-bold text-emerald-600 focus:outline-none">
           </div>
         </div>
+
         <div>
           <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tanggal Transaksi:</label>
           <input type="text" id="m-uj-tanggal" required placeholder="Pilih Waktu" class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
@@ -1049,7 +1128,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyZelfHESenI3lsVQennQ5Zoi5LAfk1XCgWRd88GgVsYLsG2TIQnKVhQpiaudmPRHPlRw/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxFAYuWE8OSLR-QTuLA3_xLNis5PRMAF5E0qx3nEG8rXu5kHqAwOeXC-eLj50SqC6hgGQ/exec";
     const SESSION_KEY = 'rqhk_kesantrian_session_v2';
     const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
 
@@ -1177,7 +1256,7 @@
     }
 
     function executeGasMethod(methodName, params) {
-      showLoading("Menghubungkan Server...", "Mengirim data ke Google Sheets");
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
       return new Promise((resolve, reject) => {
         const payload = (typeof params === 'object' && params !== null && !Array.isArray(params))
           ? { action: methodName, ...params }
@@ -1422,7 +1501,7 @@
         } catch (e) {
           reject(e);
         }
-      }, 300);
+      }, 200);
     }
 
     function initFlatpickr() {
@@ -1475,8 +1554,10 @@
 
       const dispNis = modal.querySelector('#m-uj-display-nis');
       const dispKelas = modal.querySelector('#m-uj-display-kelas');
+      const dispSaldo = modal.querySelector('#m-uj-display-saldo');
       if (dispNis) dispNis.value = '-';
       if (dispKelas) dispKelas.value = '-';
+      if (dispSaldo) dispSaldo.value = 'Rp 0';
 
       initFlatpickr();
     }
@@ -1572,26 +1653,34 @@
     function autofillUangJajanDetails(nisVal) {
       const dispNis = document.getElementById('m-uj-display-nis');
       const dispKelas = document.getElementById('m-uj-display-kelas');
-      if (!dispNis || !dispKelas) return;
+      const dispSaldo = document.getElementById('m-uj-display-saldo');
+      if (!dispNis || !dispKelas || !dispSaldo) return;
 
       if (!nisVal) {
         dispNis.value = '-';
         dispKelas.value = '-';
+        dispSaldo.value = 'Rp 0';
         return;
       }
 
       const s = appData.santriList.find(item => safeString(item.NIS) === safeString(nisVal));
+      const currentBalance = appData.saldoPerSantri[safeString(nisVal)] || 0;
+
       if (s) {
         dispNis.value = s.NIS;
         dispKelas.value = s.Kelas || '-';
+        dispSaldo.value = "Rp " + currentBalance.toLocaleString('id-ID');
       } else {
         dispNis.value = safeString(nisVal);
         dispKelas.value = '-';
+        dispSaldo.value = "Rp " + currentBalance.toLocaleString('id-ID');
       }
     }
 
     async function handleLogin(e) {
       e.preventDefault();
+      showLoading("Memverifikasi...", "Mengecek kredensial akun Anda");
+
       const username = document.getElementById('login-username').value;
       const pin = document.getElementById('login-pin').value;
       const btnText = document.getElementById('login-btn-text');
@@ -1617,7 +1706,7 @@
           updateUserUI();
           refreshData();
         } else {
-          showToast("Gagal Login", res.message || "Username/PIN Salah", "error");
+          showToast("Gagal Login", res.message || "Username atau PIN Salah", "error");
         }
       } catch (err) {
         showToast("Error Sistem", String(err ? err.message || err : err), "error");
@@ -1747,6 +1836,7 @@
         appData = data;
 
         populateSantriOptions();
+        populateFilterDropdowns();
         renderDashboardStats();
         renderSantriTable();
         renderKedisiplinanTable();
@@ -1778,6 +1868,31 @@
       });
 
       refreshTomSelects();
+    }
+
+    function populateFilterDropdowns() {
+      // 1. Filter Kelas Santri
+      const kelasSelect = document.getElementById('filter-santri-kelas');
+      if (kelasSelect) {
+        const kelasList = Array.from(new Set(appData.santriList.map(s => s.Kelas).filter(Boolean))).sort();
+        kelasSelect.innerHTML = '<option value="">-- Semua Kelas --</option>' + 
+          kelasList.map(k => `<option value="${k}">${k}</option>`).join('');
+      }
+
+      // 2. Filter Bulan Keuangan Chart
+      const monthKeuanganSelect = document.getElementById('filter-keuangan-month');
+      if (monthKeuanganSelect) {
+        const monthsSet = new Set();
+        appData.uangJajanList.forEach(u => {
+          if (u.Tanggal && u.Tanggal.length >= 7) {
+            monthsSet.add(u.Tanggal.slice(0, 7)); // Format: YYYY-MM
+          }
+        });
+
+        const sortedMonths = Array.from(monthsSet).sort().reverse();
+        monthKeuanganSelect.innerHTML = '<option value="ALL">-- Semua Periode --</option>' +
+          sortedMonths.map(m => `<option value="${m}">${m}</option>`).join('');
+      }
     }
 
     function renderDashboardStats() {
@@ -1888,7 +2003,7 @@
     }
 
     function renderCharts() {
-      // 1. Chart Izin
+      // 1. Chart Izin Dashboard
       const ctxIzin = document.getElementById('chart-izin');
       if (ctxIzin) {
         if (chartIzinInstance) chartIzinInstance.destroy();
@@ -1914,7 +2029,7 @@
         });
       }
 
-      // 2. Chart Kedisiplinan
+      // 2. Chart Kedisiplinan Dashboard
       const ctxDisc = document.getElementById('chart-kedisiplinan');
       if (ctxDisc) {
         if (chartKedisiplinanInstance) chartKedisiplinanInstance.destroy();
@@ -1940,7 +2055,7 @@
         });
       }
 
-      // 3. Chart Keuangan Trend
+      // 3. Chart Keuangan Trend Dashboard
       const ctxKeu = document.getElementById('chart-keuangan-trend');
       if (ctxKeu) {
         if (chartKeuanganTrendInstance) chartKeuanganTrendInstance.destroy();
@@ -2013,38 +2128,49 @@
           trendMap[day] = (trendMap[day] || 0) + 1;
         });
 
+        const sortedDays = Object.keys(trendMap).sort();
+
         chartDiscTrendInstance = new Chart(ctxDiscTrend.getContext('2d'), {
           type: 'line',
           data: {
-            labels: Object.keys(trendMap),
-            datasets: [{ label: 'Catatan Kedisiplinan', data: Object.values(trendMap), borderColor: '#10b981', tension: 0.3 }]
+            labels: sortedDays.length ? sortedDays : ['Hari Ini'],
+            datasets: [{ label: 'Catatan Kedisiplinan', data: sortedDays.map(d => trendMap[d]), borderColor: '#10b981', tension: 0.3 }]
           },
           options: { responsive: true, maintainAspectRatio: false }
         });
       }
 
-      // Sub-Dashboard 3: Daily Financial Trend
+      // Sub-Dashboard 3: Daily Financial Trend (Dengan Filter Bulan & Urutan Kronologis)
       const ctxKeuDaily = document.getElementById('chart-keuangan-daily');
       if (ctxKeuDaily) {
         if (chartKeuanganDailyInstance) chartKeuanganDailyInstance.destroy();
+        
+        const selectedMonth = document.getElementById('filter-keuangan-month')?.value || 'ALL';
         const setorMap = {};
         const tarikMap = {};
 
         appData.uangJajanList.forEach(u => {
-          const day = (u.Tanggal || '').slice(0, 10) || 'Hari Ini';
-          if (u['Jenis Transaksi'] === 'Setor') setorMap[day] = (setorMap[day] || 0) + Number(u.Jumlah||0);
-          if (u['Jenis Transaksi'] === 'Tarik') tarikMap[day] = (tarikMap[day] || 0) + Number(u.Jumlah||0);
+          const rawDate = (u.Tanggal || '').slice(0, 10);
+          if (!rawDate) return;
+
+          if (selectedMonth !== 'ALL' && !rawDate.startsWith(selectedMonth)) {
+            return; // Skip jika tidak sesuai bulan filter
+          }
+
+          if (u['Jenis Transaksi'] === 'Setor') setorMap[rawDate] = (setorMap[rawDate] || 0) + Number(u.Jumlah||0);
+          if (u['Jenis Transaksi'] === 'Tarik') tarikMap[rawDate] = (tarikMap[rawDate] || 0) + Number(u.Jumlah||0);
         });
 
-        const labels = Array.from(new Set([...Object.keys(setorMap), ...Object.keys(tarikMap)]));
+        // Urutkan tanggal secara kronologis (terlama ke terbaru)
+        const sortedLabels = Array.from(new Set([...Object.keys(setorMap), ...Object.keys(tarikMap)])).sort();
 
         chartKeuanganDailyInstance = new Chart(ctxKeuDaily.getContext('2d'), {
           type: 'line',
           data: {
-            labels: labels.length ? labels : ['Hari Ini'],
+            labels: sortedLabels.length ? sortedLabels : ['Hari Ini'],
             datasets: [
-              { label: 'Setor (Rp)', data: labels.map(l => setorMap[l]||0), borderColor: '#10b981', tension: 0.3 },
-              { label: 'Tarik (Rp)', data: labels.map(l => tarikMap[l]||0), borderColor: '#f43f5e', tension: 0.3 }
+              { label: 'Setor (Rp)', data: sortedLabels.map(l => setorMap[l]||0), borderColor: '#10b981', tension: 0.3 },
+              { label: 'Tarik (Rp)', data: sortedLabels.map(l => tarikMap[l]||0), borderColor: '#f43f5e', tension: 0.3 }
             ]
           },
           options: { responsive: true, maintainAspectRatio: false }
@@ -2061,11 +2187,13 @@
           izinMap[day] = (izinMap[day] || 0) + 1;
         });
 
+        const sortedIzinDays = Object.keys(izinMap).sort();
+
         chartIzinTrendInstance = new Chart(ctxIzinTrend.getContext('2d'), {
           type: 'line',
           data: {
-            labels: Object.keys(izinMap),
-            datasets: [{ label: 'Izin Diajukan', data: Object.values(izinMap), borderColor: '#3b82f6', tension: 0.3 }]
+            labels: sortedIzinDays.length ? sortedIzinDays : ['Hari Ini'],
+            datasets: [{ label: 'Izin Diajukan', data: sortedIzinDays.map(d => izinMap[d]), borderColor: '#3b82f6', tension: 0.3 }]
           },
           options: { responsive: true, maintainAspectRatio: false }
         });
@@ -2074,11 +2202,29 @@
 
     function renderSantriTable() {
       const tbody = document.getElementById('table-santri-body');
-      let list = appData.santriList;
+      let list = [...appData.santriList];
 
       if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
         list = list.filter(s => safeString(s.NIS) === safeString(currentUser.linkedNis));
       }
+
+      // Filter Pencarian Text & Kelas
+      const searchQ = safeString(document.getElementById('search-santri')?.value).toLowerCase();
+      const filterKelas = safeString(document.getElementById('filter-santri-kelas')?.value);
+      const sortType = safeString(document.getElementById('sort-santri')?.value);
+
+      if (searchQ) {
+        list = list.filter(s => safeString(s.NIS).toLowerCase().includes(searchQ) || safeString(s['Nama Lengkap']).toLowerCase().includes(searchQ));
+      }
+      if (filterKelas) {
+        list = list.filter(s => safeString(s.Kelas) === filterKelas);
+      }
+
+      // Urutkan Data
+      if (sortType === 'nama-asc') list.sort((a,b) => safeString(a['Nama Lengkap']).localeCompare(safeString(b['Nama Lengkap'])));
+      if (sortType === 'nama-desc') list.sort((a,b) => safeString(b['Nama Lengkap']).localeCompare(safeString(a['Nama Lengkap'])));
+      if (sortType === 'nis-asc') list.sort((a,b) => safeString(a.NIS).localeCompare(safeString(b.NIS)));
+      if (sortType === 'nis-desc') list.sort((a,b) => safeString(b.NIS).localeCompare(safeString(a.NIS)));
 
       const isReadOnly = currentUser && (currentUser.role === 'Pimpinan' || currentUser.role === 'Orang Tua');
 
@@ -2108,27 +2254,40 @@
             ` : ''}
           </td>
         </tr>
-      `).join('') || '<tr><td colspan="7" class="p-8 text-center text-slate-400">Tidak ada data santri.</td></tr>';
+      `).join('') || '<tr><td colspan="7" class="p-8 text-center text-slate-400">Tidak ada data santri yang sesuai filter.</td></tr>';
 
       lucide.createIcons();
     }
 
-    function filterSantriTable() {
-      const q = document.getElementById('search-santri').value.toLowerCase();
-      const rows = document.querySelectorAll('#table-santri-body tr');
-      rows.forEach(r => {
-        const txt = r.innerText.toLowerCase();
-        r.style.display = txt.includes(q) ? '' : 'none';
-      });
-    }
-
     function renderKedisiplinanTable() {
       const tbody = document.getElementById('table-disc-body');
-      let list = appData.pelanggaranList;
+      let list = [...appData.pelanggaranList];
 
       if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
         list = list.filter(p => safeString(p.NIS) === safeString(currentUser.linkedNis));
       }
+
+      const searchQ = safeString(document.getElementById('search-disc')?.value).toLowerCase();
+      const filterTipe = safeString(document.getElementById('filter-disc-tipe')?.value);
+      const sortType = safeString(document.getElementById('sort-disc')?.value);
+
+      if (searchQ) {
+        list = list.filter(d => {
+          const s = appData.santriList.find(item => safeString(item.NIS) === safeString(d.NIS));
+          const sName = s ? s['Nama Lengkap'].toLowerCase() : '';
+          return safeString(d.NIS).toLowerCase().includes(searchQ) || 
+                 sName.includes(searchQ) || 
+                 safeString(d.Keterangan).toLowerCase().includes(searchQ) ||
+                 safeString(d.Kategori).toLowerCase().includes(searchQ);
+        });
+      }
+      if (filterTipe) {
+        list = list.filter(d => safeString(d.Tipe) === filterTipe);
+      }
+
+      if (sortType === 'tgl-desc') list.sort((a,b) => safeString(b.Tanggal).localeCompare(safeString(a.Tanggal)));
+      if (sortType === 'tgl-asc') list.sort((a,b) => safeString(a.Tanggal).localeCompare(safeString(b.Tanggal)));
+      if (sortType === 'poin-desc') list.sort((a,b) => Number(b.Poin||0) - Number(a.Poin||0));
 
       const isReadOnly = currentUser && (currentUser.role === 'Pimpinan' || currentUser.role === 'Orang Tua');
 
@@ -2161,18 +2320,41 @@
             </td>
           </tr>
         `;
-      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada rekam catatan kedisiplinan.</td></tr>';
+      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada rekam catatan kedisiplinan yang sesuai filter.</td></tr>';
 
       lucide.createIcons();
     }
 
     function renderKeuanganTable() {
       const tbody = document.getElementById('table-keuangan-body');
-      let list = appData.uangJajanList;
+      let list = [...appData.uangJajanList];
 
       if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
         list = list.filter(u => safeString(u.NIS) === safeString(currentUser.linkedNis));
       }
+
+      const searchQ = safeString(document.getElementById('search-keuangan')?.value).toLowerCase();
+      const filterJenis = safeString(document.getElementById('filter-keuangan-jenis')?.value);
+      const sortType = safeString(document.getElementById('sort-keuangan')?.value);
+
+      if (searchQ) {
+        list = list.filter(u => {
+          const s = appData.santriList.find(item => safeString(item.NIS) === safeString(u.NIS));
+          const sName = s ? s['Nama Lengkap'].toLowerCase() : '';
+          return safeString(u.NIS).toLowerCase().includes(searchQ) || 
+                 sName.includes(searchQ) || 
+                 safeString(u.Keterangan).toLowerCase().includes(searchQ);
+        });
+      }
+
+      if (filterJenis) {
+        if (filterJenis === 'Mutasi') list = list.filter(u => u['Jenis Transaksi'].includes('Mutasi'));
+        else list = list.filter(u => u['Jenis Transaksi'] === filterJenis);
+      }
+
+      if (sortType === 'tgl-desc') list.sort((a,b) => safeString(b.Tanggal).localeCompare(safeString(a.Tanggal)));
+      if (sortType === 'tgl-asc') list.sort((a,b) => safeString(a.Tanggal).localeCompare(safeString(b.Tanggal)));
+      if (sortType === 'nominal-desc') list.sort((a,b) => Number(b.Jumlah||0) - Number(a.Jumlah||0));
 
       const isReadOnly = currentUser && (currentUser.role === 'Pimpinan' || currentUser.role === 'Orang Tua');
 
@@ -2201,18 +2383,39 @@
             </td>
           </tr>
         `;
-      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada riwayat transaksi.</td></tr>';
+      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada riwayat transaksi yang sesuai filter.</td></tr>';
 
       lucide.createIcons();
     }
 
     function renderPerizinanTable() {
       const tbody = document.getElementById('table-perizinan-body');
-      let list = appData.perizinanList;
+      let list = [...appData.perizinanList];
 
       if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
         list = list.filter(p => safeString(p.NIS) === safeString(currentUser.linkedNis));
       }
+
+      const searchQ = safeString(document.getElementById('search-perizinan')?.value).toLowerCase();
+      const filterStatus = safeString(document.getElementById('filter-perizinan-status')?.value);
+      const sortType = safeString(document.getElementById('sort-perizinan')?.value);
+
+      if (searchQ) {
+        list = list.filter(p => {
+          const s = appData.santriList.find(item => safeString(item.NIS) === safeString(p.NIS));
+          const sName = s ? s['Nama Lengkap'].toLowerCase() : '';
+          return safeString(p.NIS).toLowerCase().includes(searchQ) || 
+                 sName.includes(searchQ) || 
+                 safeString(p.Alasan).toLowerCase().includes(searchQ);
+        });
+      }
+
+      if (filterStatus) {
+        list = list.filter(p => safeString(p.Status) === filterStatus);
+      }
+
+      if (sortType === 'tgl-desc') list.sort((a,b) => safeString(b.Tanggal).localeCompare(safeString(a.Tanggal)));
+      if (sortType === 'tgl-asc') list.sort((a,b) => safeString(a.Tanggal).localeCompare(safeString(b.Tanggal)));
 
       const isReadOnly = currentUser && (currentUser.role === 'Pimpinan' || currentUser.role === 'Orang Tua');
 
@@ -2253,7 +2456,7 @@
             </td>
           </tr>
         `;
-      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada pengajuan perizinan.</td></tr>';
+      }).join('') || '<tr><td colspan="8" class="p-8 text-center text-slate-400">Belum ada pengajuan perizinan yang sesuai filter.</td></tr>';
 
       lucide.createIcons();
     }
@@ -2280,6 +2483,8 @@
 
     async function handleSaveSantri(e) {
       e.preventDefault();
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
+
       const formData = {
         editIndex: document.getElementById('m-santri-edit-id').value,
         nis: document.getElementById('m-santri-nis').value,
@@ -2323,6 +2528,8 @@
 
     async function handleAddKedisiplinan(e) {
       e.preventDefault();
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
+
       const formData = {
         editIndex: document.getElementById('m-disc-edit-id').value,
         nis: document.getElementById('m-disc-nis').value,
@@ -2359,6 +2566,7 @@
       document.getElementById('modal-uj-title').innerText = "Edit Transaksi Keuangan";
       document.getElementById('m-uj-edit-id').value = u['ID Transaksi'] || u.ID;
       setSelectValue('m-uj-nis', u.NIS);
+      autofillUangJajanDetails(u.NIS);
       document.getElementById('m-uj-tanggal').value = u.Tanggal;
       setSelectValue('m-uj-jenis', u['Jenis Transaksi']);
       setSelectValue('m-uj-metode', u['Sumber/Metode']);
@@ -2368,10 +2576,13 @@
 
     async function handleAddUangJajan(e) {
       e.preventDefault();
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
+
       const jumlahStr = document.getElementById('m-uj-jumlah').value;
       const nominal = getNumericValue(jumlahStr);
 
       if (!nominal) {
+        hideLoading();
         showToast("Nominal Salah", "Silakan masukkan jumlah nominal uang.", "error");
         return;
       }
@@ -2405,10 +2616,13 @@
 
     async function handleMutasi(e) {
       e.preventDefault();
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
+
       const jumlahStr = document.getElementById('m-mutasi-jumlah').value;
       const nominal = getNumericValue(jumlahStr);
 
       if (!nominal) {
+        hideLoading();
         showToast("Nominal Salah", "Silakan masukkan nominal mutasi.", "error");
         return;
       }
@@ -2441,6 +2655,8 @@
 
     async function handleAddPerizinan(e) {
       e.preventDefault();
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
+
       const formData = {
         editIndex: document.getElementById('m-izn-edit-id').value,
         nis: document.getElementById('m-izn-nis').value,
@@ -2462,6 +2678,7 @@
     }
 
     async function updateIzin(idIzin, status) {
+      showLoading("Memproses Data...", "Mohon tunggu sebentar");
       try {
         const res = await executeGasMethod('updateStatusIzin', { idIzin, status, diinputOleh: currentUser ? currentUser.nama : "Admin" });
         showToast("Status Diperbarui", res.message, "success");
@@ -2481,6 +2698,7 @@
       if (!pendingDeleteTarget) return;
       const { type, id } = pendingDeleteTarget;
       toggleModal('modal-confirm-delete', false);
+      showLoading("Memproses Data...", "Menghapus data terkait");
 
       const actionMap = {
         santri: 'deleteSantri',
@@ -2696,11 +2914,12 @@
             dailyMap[day] = (dailyMap[day] || 0) + Number(u.Jumlah||0);
           });
 
-          const dLabels = Object.keys(dailyMap).length ? Object.keys(dailyMap) : ['Hari Ini'];
+          const dLabels = Object.keys(dailyMap).sort();
+
           chartReportDailyExpenseInstance = new Chart(ctxDaily.getContext('2d'), {
             type: 'line',
             data: {
-              labels: dLabels,
+              labels: dLabels.length ? dLabels : ['Hari Ini'],
               datasets: [{
                 label: 'Pengeluaran Jajan (Rp)',
                 data: dLabels.map(l => dailyMap[l] || 0),
@@ -2721,7 +2940,7 @@
       const selectVal = document.getElementById('select-report-santri').value;
       if (!selectVal) return;
 
-      showLoading("Membentuk PDF...", "Menyiapkan dokumen laporan resmi");
+      showLoading("Memproses Data...", "Menyiapkan dokumen PDF");
 
       const opt = {
         margin: [0.15, 0.15, 0.35, 0.15],
