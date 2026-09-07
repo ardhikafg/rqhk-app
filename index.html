@@ -252,7 +252,7 @@
           </button>
           <button onclick="switchTab('santri')" id="btn-santri" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900">
             <i data-lucide="users" class="w-4 h-4"></i>
-            <span>Data Santri</span>
+            <span id="nav-label-santri">Data Santri</span>
           </button>
           <button onclick="switchTab('kedisiplinan')" id="btn-kedisiplinan" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900">
             <i data-lucide="shield-alert" class="w-4 h-4"></i>
@@ -260,7 +260,7 @@
           </button>
           <button onclick="switchTab('keuangan')" id="btn-keuangan" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900">
             <i data-lucide="wallet" class="w-4 h-4"></i>
-            <span>Uang Jajan & Mutasi</span>
+            <span>Uang Jajan</span>
           </button>
           <button onclick="switchTab('perizinan')" id="btn-perizinan" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900">
             <i data-lucide="calendar-days" class="w-4 h-4"></i>
@@ -318,8 +318,8 @@
       <!-- TAB 1: DASHBOARD UTAMA -->
       <div id="tab-dashboard" class="tab-content fade-in space-y-6">
         
-        <!-- Stat Cards Baris 1 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- ADMIN & PIMPINAN STAT CARDS (ROW 1) -->
+        <div id="dash-admin-stats-1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 card-hover">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Santri</span>
@@ -357,8 +357,8 @@
           </div>
         </div>
 
-        <!-- Stat Cards Baris 2 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- ADMIN & PIMPINAN STAT CARDS (ROW 2) -->
+        <div id="dash-admin-stats-2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-5 rounded-2xl shadow-md border border-emerald-600/30">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100">Saldo Santri Terbanyak</span>
@@ -398,8 +398,47 @@
           </div>
         </div>
 
-        <!-- GRAFIK STATISTIK DASHBOARD UTAMA -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- WALI SANTRI SPECIFIC DASHBOARD STAT CARDS -->
+        <div id="dash-wali-stats" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-5 rounded-2xl shadow-md border border-emerald-500/30">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100">Sisa Saldo Jajan</span>
+              <i data-lucide="wallet" class="w-4 h-4 text-emerald-200"></i>
+            </div>
+            <h3 id="wali-stat-saldo" class="text-2xl font-black mt-1">Rp 0</h3>
+            <p class="text-[11px] text-emerald-100 mt-1">Tabungan jajan ananda saat ini</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Poin Pelanggaran</span>
+              <div class="p-2 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="shield-alert" class="w-4 h-4"></i></div>
+            </div>
+            <h3 id="wali-stat-pelanggaran" class="text-2xl font-black text-rose-600">0 Poin</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Akumulasi catatan pelanggaran</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Poin Penghargaan</span>
+              <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="award" class="w-4 h-4"></i></div>
+            </div>
+            <h3 id="wali-stat-penghargaan" class="text-2xl font-black text-emerald-600">0 Poin</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Akumulasi prestasi & adab</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Status Perizinan</span>
+              <div class="p-2 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
+            </div>
+            <h3 id="wali-stat-izin" class="text-xl font-black text-blue-600">Di Pondok</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Status keberadaan ananda</p>
+          </div>
+        </div>
+
+        <!-- GRAFIK STATISTIK DASHBOARD UTAMA (ADMIN & PIMPINAN) -->
+        <div id="dash-admin-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div class="flex justify-between items-center mb-3">
               <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Status Perizinan Santri</h4>
@@ -463,8 +502,8 @@
       <!-- TAB 2: DATA SANTRI -->
       <div id="tab-santri" class="tab-content hidden fade-in space-y-5">
         
-        <!-- SUB DASHBOARD SANTRI -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- ADMIN & PIMPINAN SUB DASHBOARD SANTRI -->
+        <div id="santri-sub-dash" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Total Santri Aktif</span>
@@ -488,16 +527,49 @@
           </div>
         </div>
 
-        <!-- GRAFIK SUB DASHBOARD SANTRI -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+        <!-- GRAFIK REGIONAL (ADMIN & PIMPINAN ONLY) -->
+        <div id="santri-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Sebaran Asal Daerah Santri</h4>
           <div class="relative h-48 w-full flex items-center justify-center">
             <canvas id="chart-santri-daerah"></canvas>
           </div>
         </div>
 
+        <!-- WALI SANTRI BIODATA CARD (ONLY FOR WALI SANTRI) -->
+        <div id="wali-biodata-card" class="hidden bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+          <div class="flex items-center space-x-4 border-b border-slate-100 pb-4">
+            <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-black text-xl border border-emerald-100 shadow-sm">
+              <i data-lucide="user" class="w-7 h-7 text-emerald-600"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Biodata Santri Ananda</span>
+              <h3 id="wali-bio-nama" class="text-base font-extrabold text-slate-900">-</h3>
+              <p class="text-xs text-slate-500 mt-0.5">NIS: <span id="wali-bio-nis" class="font-bold text-slate-800">-</span></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase block">Kelas & Angkatan</span>
+              <p id="wali-bio-kelas-angkatan" class="font-bold text-slate-800 text-xs">-</p>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase block">Status Keaktifan</span>
+              <p id="wali-bio-status" class="font-bold text-emerald-600 text-xs">-</p>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase block">No HP Orang Tua / Wali</span>
+              <p id="wali-bio-nohp" class="font-bold text-slate-800 text-xs">-</p>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase block">Alamat Rumah</span>
+              <p id="wali-bio-alamat" class="font-medium text-slate-700 text-xs">-</p>
+            </div>
+          </div>
+        </div>
+
         <!-- FILTER & ACTION BAR SANTRI -->
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div id="santri-filter-bar" class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
             <div class="relative">
               <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
@@ -519,7 +591,7 @@
           </button>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
+        <div id="santri-table-container" class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
@@ -567,8 +639,8 @@
           </div>
         </div>
 
-        <!-- GRAFIK SUB DASHBOARD KEDISIPLINAN -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- GRAFIK SUB DASHBOARD KEDISIPLINAN (ADMIN & PIMPINAN ONLY) -->
+        <div id="disc-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Rasio Pelanggaran vs Penghargaan</h4>
             <div class="relative h-44 w-full flex items-center justify-center">
@@ -631,8 +703,8 @@
       <!-- TAB 4: UANG JAJAN & MUTASI -->
       <div id="tab-keuangan" class="tab-content hidden fade-in space-y-5">
         
-        <!-- SUB DASHBOARD KEUANGAN -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <!-- SUB DASHBOARD KEUANGAN ADMIN & PIMPINAN -->
+        <div id="keuangan-admin-sub" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Kas Fisik Tunai</span>
             <h4 id="sub-keuangan-cash" class="text-lg font-black text-teal-600 mt-1">Rp 0</h4>
@@ -651,7 +723,23 @@
           </div>
         </div>
 
-        <!-- GRAFIK TREN KEUANGAN HARIAN (DENGAN FILTER BULANAN) -->
+        <!-- SUB DASHBOARD KEUANGAN WALI SANTRI -->
+        <div id="keuangan-wali-sub" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-4 rounded-2xl shadow-sm">
+            <span class="text-[10px] font-extrabold text-emerald-100 uppercase">Sisa Saldo Jajan Ananda</span>
+            <h4 id="wali-keuangan-saldo" class="text-xl font-black mt-1">Rp 0</h4>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Total Setor Titipan</span>
+            <h4 id="wali-keuangan-setor" class="text-lg font-black text-emerald-600 mt-1">Rp 0</h4>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Total Jajan Ditarik</span>
+            <h4 id="wali-keuangan-tarik" class="text-lg font-black text-rose-600 mt-1">Rp 0</h4>
+          </div>
+        </div>
+
+        <!-- GRAFIK TREN KEUANGAN HARIAN -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Grafik Tren Transaksi Keuangan Harian</h4>
@@ -667,7 +755,8 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- ACTION BUTTON CARDS (ADMIN ONLY) -->
+        <div id="keuangan-action-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex justify-between items-center">
             <div>
               <h4 class="font-bold text-slate-900 text-xs">Setor / Tarik Uang Jajan</h4>
@@ -760,8 +849,8 @@
           </div>
         </div>
 
-        <!-- GRAFIK SUB DASHBOARD PERIZINAN -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+        <!-- GRAFIK TREN PERIZINAN (ADMIN & PIMPINAN ONLY) -->
+        <div id="izin-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Frekuensi Perizinan</h4>
           <div class="relative h-48 w-full">
             <canvas id="chart-izin-trend"></canvas>
@@ -789,7 +878,7 @@
           </div>
           <button id="btn-add-izin" onclick="openModalPerizinan()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm whitespace-nowrap">
             <i data-lucide="file-plus" class="w-4 h-4"></i>
-            <span>Buat Izin Baru</span>
+            <span id="btn-label-izin">Buat Izin Baru</span>
           </button>
         </div>
 
@@ -817,13 +906,13 @@
       <!-- TAB 6: LAPORAN & INFOGRAFIS AUTOMATIS -->
       <div id="tab-laporan" class="tab-content hidden fade-in space-y-6">
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <label class="text-xs font-bold text-slate-700 block mb-2 uppercase tracking-wider">Pilih Santri untuk Menampilkan Laporan Otomatis:</label>
+          <label id="lbl-report-select" class="text-xs font-bold text-slate-700 block mb-2 uppercase tracking-wider">Pilih Santri untuk Menampilkan Laporan Otomatis:</label>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
+            <div id="box-select-report-santri">
               <select id="select-report-santri" class="w-full select-santri-options">
               </select>
             </div>
-            <div class="md:col-span-2 flex items-center justify-end">
+            <div id="box-report-actions" class="md:col-span-2 flex items-center justify-end">
               <button onclick="downloadPDFReport()" id="btn-download-pdf" disabled class="bg-emerald-600 opacity-50 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition shadow-md">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 <span>Download PDF Laporan Resmi</span>
@@ -949,7 +1038,7 @@
     </div>
   </div>
 
-  <!-- MODAL UANG JAJAN (DILENGKAPI KELAS/ANGKATAN DAN SALDO TERKINI OTOMATIS) -->
+  <!-- MODAL UANG JAJAN -->
   <div id="modal-uang-jajan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up">
       <h3 id="modal-uj-title" class="text-sm font-bold text-slate-900 mb-4">Input Transaksi Uang Jajan</h3>
@@ -1043,17 +1132,18 @@
       <h3 id="modal-izn-title" class="text-sm font-bold text-slate-900 mb-4">Pengajuan Izin Santri</h3>
       <form onsubmit="handleAddPerizinan(event)" class="space-y-3 text-xs">
         <input type="hidden" id="m-izn-edit-id">
-        <div>
+        <div id="box-izn-nis-select">
           <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
           <select id="m-izn-nis" required class="w-full select-santri-options search-select"></select>
         </div>
         <div>
           <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kategori Izin:</label>
           <select id="m-izn-kategori" required class="w-full search-select">
-            <option value="Izin Keluar Pondok">Izin Keluar Pondok</option>
-            <option value="Izin Bertemu Orang Tua">Izin Bertemu Orang Tua</option>
-            <option value="Izin Menelpon">Izin Menelpon</option>
-            <option value="Izin Pulang/Cuti">Izin Pulang / Cuti</option>
+            <option value="Izin Datang Bertemu Santri">Izin Datang Bertemu Santri</option>
+            <option value="Izin Keluar Membawa Santri">Izin Keluar Membawa Santri</option>
+            <option value="Izin Keluar Pondok" class="opt-admin-only">Izin Keluar Pondok</option>
+            <option value="Izin Menelpon" class="opt-admin-only">Izin Menelpon</option>
+            <option value="Izin Pulang/Cuti" class="opt-admin-only">Izin Pulang / Cuti</option>
           </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -1481,7 +1571,7 @@
                 Selesai: params.selesai,
                 Alasan: params.alasan,
                 Status: 'Pending',
-                "Diinput Oleh": currentUser ? currentUser.nama : "Admin"
+                "Diinput Oleh": currentUser ? currentUser.nama : "Wali Santri"
               });
             }
             resolve({ status: 'success', message: 'Pengajuan izin berhasil disimpan!' });
@@ -1760,13 +1850,94 @@
       const isReadOnly = currentUser.role === 'Pimpinan';
       const isWali = currentUser.role === 'Orang Tua';
 
-      ['btn-add-santri', 'btn-add-disc', 'btn-add-uj', 'btn-add-mutasi', 'btn-add-izin'].forEach(id => {
+      // Customize Sidebar Navigation Labels
+      const navSantriLabel = document.getElementById('nav-label-santri');
+      if (navSantriLabel) {
+        navSantriLabel.innerText = isWali ? "Biodata Santri" : "Data Santri";
+      }
+
+      // Hide or Show Action Buttons based on roles
+      ['btn-add-santri', 'btn-add-disc', 'btn-add-uj', 'btn-add-mutasi'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
           if (isReadOnly || isWali) btn.classList.add('hidden');
           else btn.classList.remove('hidden');
         }
       });
+
+      // Handle Perizinan Button for Wali Santri
+      const btnAddIzin = document.getElementById('btn-add-izin');
+      const btnLabelIzin = document.getElementById('btn-label-izin');
+      if (btnAddIzin) {
+        if (isReadOnly) {
+          btnAddIzin.classList.add('hidden');
+        } else if (isWali) {
+          btnAddIzin.classList.remove('hidden');
+          if (btnLabelIzin) btnLabelIzin.innerText = "Ajukan Perizinan";
+        } else {
+          btnAddIzin.classList.remove('hidden');
+          if (btnLabelIzin) btnLabelIzin.innerText = "Buat Izin Baru";
+        }
+      }
+
+      // Role specific layout toggles
+      if (isWali) {
+        // Dashboard Stats
+        document.getElementById('dash-admin-stats-1')?.classList.add('hidden');
+        document.getElementById('dash-admin-stats-2')?.classList.add('hidden');
+        document.getElementById('dash-admin-charts')?.classList.add('hidden');
+        document.getElementById('dash-wali-stats')?.classList.remove('hidden');
+
+        // Santri Module
+        document.getElementById('santri-sub-dash')?.classList.add('hidden');
+        document.getElementById('santri-chart-box')?.classList.add('hidden');
+        document.getElementById('santri-filter-bar')?.classList.add('hidden');
+        document.getElementById('santri-table-container')?.classList.add('hidden');
+        document.getElementById('wali-biodata-card')?.classList.remove('hidden');
+
+        // Kedisiplinan Module
+        document.getElementById('disc-charts-container')?.classList.add('hidden');
+
+        // Keuangan Module
+        document.getElementById('keuangan-admin-sub')?.classList.add('hidden');
+        document.getElementById('keuangan-action-cards')?.classList.add('hidden');
+        document.getElementById('keuangan-wali-sub')?.classList.remove('hidden');
+
+        // Perizinan Module
+        document.getElementById('izin-chart-box')?.classList.add('hidden');
+
+        // Laporan Module
+        document.getElementById('lbl-report-select')?.classList.add('hidden');
+        document.getElementById('box-select-report-santri')?.classList.add('hidden');
+        document.getElementById('box-report-actions')?.classList.remove('md:col-span-2');
+        document.getElementById('box-report-actions')?.classList.add('md:col-span-3');
+
+      } else {
+        // Admin / Pimpinan View Reset
+        document.getElementById('dash-admin-stats-1')?.classList.remove('hidden');
+        document.getElementById('dash-admin-stats-2')?.classList.remove('hidden');
+        document.getElementById('dash-admin-charts')?.classList.remove('hidden');
+        document.getElementById('dash-wali-stats')?.classList.add('hidden');
+
+        document.getElementById('santri-sub-dash')?.classList.remove('hidden');
+        document.getElementById('santri-chart-box')?.classList.remove('hidden');
+        document.getElementById('santri-filter-bar')?.classList.remove('hidden');
+        document.getElementById('santri-table-container')?.classList.remove('hidden');
+        document.getElementById('wali-biodata-card')?.classList.add('hidden');
+
+        document.getElementById('disc-charts-container')?.classList.remove('hidden');
+
+        document.getElementById('keuangan-admin-sub')?.classList.remove('hidden');
+        document.getElementById('keuangan-action-cards')?.classList.remove('hidden');
+        document.getElementById('keuangan-wali-sub')?.classList.add('hidden');
+
+        document.getElementById('izin-chart-box')?.classList.remove('hidden');
+
+        document.getElementById('lbl-report-select')?.classList.remove('hidden');
+        document.getElementById('box-select-report-santri')?.classList.remove('hidden');
+        document.getElementById('box-report-actions')?.classList.add('md:col-span-2');
+        document.getElementById('box-report-actions')?.classList.remove('md:col-span-3');
+      }
     }
 
     function openLogoutModal() {
@@ -1802,18 +1973,25 @@
         activeBtn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition bg-emerald-600 text-white shadow-md shadow-emerald-600/20";
       }
 
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+
       const titles = {
-        dashboard: ["Dashboard Utama", "Analisis statistik real-time dan ringkasan aktivitas santri."],
-        santri: ["Data Master Santri", "Kelola profil santri Rumah Al-Qur'an Husnul Khatimah."],
-        kedisiplinan: ["Catatan Kedisiplinan", "Catatan poin kedisiplinan dan penghargaan santri."],
-        keuangan: ["Uang Jajan & Mutasi Dana", "Pencatatan saldo, setoran, penarikan, dan mutasi kas."],
-        perizinan: ["Perizinan Santri", "Kelola izin keluar, telepon, bertemu ortu, dan cuti."],
-        laporan: ["Laporan & Infografis PDF", "Pilih santri untuk melihat rangkuman visual dan unduh PDF resmi."]
+        dashboard: ["Dashboard Utama", isWali ? "Ringkasan perkembangan dan tabungan jajan ananda." : "Analisis statistik real-time dan ringkasan aktivitas santri."],
+        santri: [isWali ? "Biodata Santri Ananda" : "Data Master Santri", isWali ? "Detail informasi profil dan identitas ananda." : "Kelola profil santri Rumah Al-Qur'an Husnul Khatimah."],
+        kedisiplinan: ["Catatan Kedisiplinan", isWali ? "Rekam jejak poin adab dan prestasi ananda." : "Catatan poin kedisiplinan dan penghargaan santri."],
+        keuangan: ["Uang Jajan", isWali ? "Riwayat penggunaan dan titipan uang jajan ananda." : "Pencatatan saldo, setoran, penarikan, dan mutasi kas."],
+        perizinan: ["Perizinan Santri", isWali ? "Pengajuan dan rekam jejak izin ananda." : "Kelola izin keluar, telepon, bertemu ortu, dan cuti."],
+        laporan: ["Laporan & Infografis PDF", isWali ? "Laporan resmi perkembangan dan grafik tabungan ananda." : "Pilih santri untuk melihat rangkuman visual dan unduh PDF resmi."]
       };
 
       if (titles[tabId]) {
         document.getElementById('page-title').innerText = titles[tabId][0];
         document.getElementById('page-subtitle').innerText = titles[tabId][1];
+      }
+
+      if (tabId === 'laporan' && isWali && currentUser.linkedNis) {
+        setSelectValue('select-report-santri', currentUser.linkedNis);
+        onSelectReportSantri(currentUser.linkedNis);
       }
 
       closeSidebar();
@@ -1872,7 +2050,6 @@
     }
 
     function populateFilterDropdowns() {
-      // 1. Filter Kelas Santri
       const kelasSelect = document.getElementById('filter-santri-kelas');
       if (kelasSelect) {
         const kelasList = Array.from(new Set(appData.santriList.map(s => s.Kelas).filter(Boolean))).sort();
@@ -1880,13 +2057,12 @@
           kelasList.map(k => `<option value="${k}">${k}</option>`).join('');
       }
 
-      // 2. Filter Bulan Keuangan Chart
       const monthKeuanganSelect = document.getElementById('filter-keuangan-month');
       if (monthKeuanganSelect) {
         const monthsSet = new Set();
         appData.uangJajanList.forEach(u => {
           if (u.Tanggal && u.Tanggal.length >= 7) {
-            monthsSet.add(u.Tanggal.slice(0, 7)); // Format: YYYY-MM
+            monthsSet.add(u.Tanggal.slice(0, 7));
           }
         });
 
@@ -1900,37 +2076,54 @@
 
     function renderDashboardStats() {
       const stats = appData.stats || {};
-      
-      document.getElementById('stat-santri').innerText = stats.totalSantri || appData.santriList.length;
-      document.getElementById('stat-cash').innerText = "Rp " + (stats.saldoCash || 0).toLocaleString('id-ID');
-      document.getElementById('stat-musyrif').innerText = "Rp " + (stats.saldoMusyrif || 0).toLocaleString('id-ID');
-      document.getElementById('stat-izin').innerText = stats.izinAktif || 0;
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+      const childNis = isWali ? safeString(currentUser.linkedNis) : '';
 
-      document.getElementById('stat-total-setor').innerText = "Rp " + (stats.totalSetor || 0).toLocaleString('id-ID');
-      document.getElementById('stat-total-tarik').innerText = "Rp " + (stats.totalTarik || 0).toLocaleString('id-ID');
+      if (isWali && childNis) {
+        // Wali Santri Specific Dashboard Stats
+        const childSaldo = appData.saldoPerSantri[childNis] || 0;
+        const childPel = appData.pelanggaranList.filter(p => safeString(p.NIS) === childNis && p.Tipe === 'Pelanggaran').reduce((a, b) => a + Number(b.Poin||0), 0);
+        const childPeng = appData.pelanggaranList.filter(p => safeString(p.NIS) === childNis && p.Tipe === 'Penghargaan').reduce((a, b) => a + Number(b.Poin||0), 0);
+        const activeLeave = appData.perizinanList.find(i => safeString(i.NIS) === childNis && i.Status === 'Disetujui');
 
-      let maxName = "-", minName = "-";
-      let maxVal = -Infinity, minVal = Infinity;
+        document.getElementById('wali-stat-saldo').innerText = "Rp " + childSaldo.toLocaleString('id-ID');
+        document.getElementById('wali-stat-pelanggaran').innerText = childPel + " Poin";
+        document.getElementById('wali-stat-penghargaan').innerText = childPeng + " Poin";
+        document.getElementById('wali-stat-izin').innerText = activeLeave ? "Izin Keluar" : "Di Pondok";
 
-      Object.keys(appData.saldoPerSantri).forEach(nis => {
-        const val = appData.saldoPerSantri[nis];
-        const santri = appData.santriList.find(s => safeString(s.NIS) === safeString(nis));
-        const sName = santri ? santri['Nama Lengkap'] : nis;
+      } else {
+        // Admin / Pimpinan Stats
+        document.getElementById('stat-santri').innerText = stats.totalSantri || appData.santriList.length;
+        document.getElementById('stat-cash').innerText = "Rp " + (stats.saldoCash || 0).toLocaleString('id-ID');
+        document.getElementById('stat-musyrif').innerText = "Rp " + (stats.saldoMusyrif || 0).toLocaleString('id-ID');
+        document.getElementById('stat-izin').innerText = stats.izinAktif || 0;
 
-        if (val > maxVal) { maxVal = val; maxName = sName; }
-        if (val < minVal) { minVal = val; minName = sName; }
-      });
+        document.getElementById('stat-total-setor').innerText = "Rp " + (stats.totalSetor || 0).toLocaleString('id-ID');
+        document.getElementById('stat-total-tarik').innerText = "Rp " + (stats.totalTarik || 0).toLocaleString('id-ID');
 
-      if (maxVal === -Infinity) maxVal = 0;
-      if (minVal === Infinity) minVal = 0;
+        let maxName = "-", minName = "-";
+        let maxVal = -Infinity, minVal = Infinity;
 
-      document.getElementById('stat-max-balance-name').innerText = maxName;
-      document.getElementById('stat-max-balance-val').innerText = "Rp " + maxVal.toLocaleString('id-ID');
+        Object.keys(appData.saldoPerSantri).forEach(nis => {
+          const val = appData.saldoPerSantri[nis];
+          const santri = appData.santriList.find(s => safeString(s.NIS) === safeString(nis));
+          const sName = santri ? santri['Nama Lengkap'] : nis;
 
-      document.getElementById('stat-min-balance-name').innerText = minName;
-      document.getElementById('stat-min-balance-val').innerText = "Rp " + minVal.toLocaleString('id-ID');
+          if (val > maxVal) { maxVal = val; maxName = sName; }
+          if (val < minVal) { minVal = val; minName = sName; }
+        });
 
-      // Sub Dashboard Metrics
+        if (maxVal === -Infinity) maxVal = 0;
+        if (minVal === Infinity) minVal = 0;
+
+        document.getElementById('stat-max-balance-name').innerText = maxName;
+        document.getElementById('stat-max-balance-val').innerText = "Rp " + maxVal.toLocaleString('id-ID');
+
+        document.getElementById('stat-min-balance-name').innerText = minName;
+        document.getElementById('stat-min-balance-val').innerText = "Rp " + minVal.toLocaleString('id-ID');
+      }
+
+      // Sub Dashboard Metrics (Admin/Pimpinan)
       document.getElementById('sub-santri-total').innerText = appData.santriList.length;
       const kelasSet = new Set(appData.santriList.map(s => s.Kelas).filter(Boolean));
       document.getElementById('sub-santri-kelas').innerText = kelasSet.size;
@@ -1959,7 +2152,20 @@
       const recIzin = document.getElementById('dashboard-recent-izin');
       const recDisc = document.getElementById('dashboard-recent-disc');
 
-      recKeuangan.innerHTML = appData.uangJajanList.slice(0, 4).map(u => {
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+      const childNis = isWali ? safeString(currentUser.linkedNis) : '';
+
+      let listKeuangan = [...appData.uangJajanList];
+      let listIzin = [...appData.perizinanList];
+      let listDisc = [...appData.pelanggaranList];
+
+      if (isWali && childNis) {
+        listKeuangan = listKeuangan.filter(u => safeString(u.NIS) === childNis);
+        listIzin = listIzin.filter(i => safeString(i.NIS) === childNis);
+        listDisc = listDisc.filter(d => safeString(d.NIS) === childNis);
+      }
+
+      recKeuangan.innerHTML = listKeuangan.slice(0, 4).map(u => {
         const santri = appData.santriList.find(s => safeString(s.NIS) === safeString(u.NIS));
         return `
           <div class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl border border-slate-100">
@@ -1974,7 +2180,7 @@
         `;
       }).join('') || '<p class="text-slate-400 text-xs">Belum ada transaksi.</p>';
 
-      recIzin.innerHTML = appData.perizinanList.slice(0, 4).map(p => {
+      recIzin.innerHTML = listIzin.slice(0, 4).map(p => {
         const santri = appData.santriList.find(s => safeString(s.NIS) === safeString(p.NIS));
         return `
           <div class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl border border-slate-100">
@@ -1989,7 +2195,7 @@
         `;
       }).join('') || '<p class="text-slate-400 text-xs">Belum ada perizinan.</p>';
 
-      recDisc.innerHTML = appData.pelanggaranList.slice(0, 4).map(d => {
+      recDisc.innerHTML = listDisc.slice(0, 4).map(d => {
         const santri = appData.santriList.find(s => safeString(s.NIS) === safeString(d.NIS));
         return `
           <div class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl border border-slate-100">
@@ -2006,9 +2212,11 @@
     }
 
     function renderCharts() {
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+
       // 1. Chart Izin Dashboard
       const ctxIzin = document.getElementById('chart-izin');
-      if (ctxIzin) {
+      if (ctxIzin && !isWali) {
         if (chartIzinInstance) chartIzinInstance.destroy();
         const pending = appData.perizinanList.filter(p => p.Status === 'Pending').length;
         const disetujui = appData.perizinanList.filter(p => p.Status === 'Disetujui').length;
@@ -2034,7 +2242,7 @@
 
       // 2. Chart Kedisiplinan Dashboard
       const ctxDisc = document.getElementById('chart-kedisiplinan');
-      if (ctxDisc) {
+      if (ctxDisc && !isWali) {
         if (chartKedisiplinanInstance) chartKedisiplinanInstance.destroy();
         const totalPel = appData.pelanggaranList.filter(p => p.Tipe === 'Pelanggaran').reduce((a, b) => a + Number(b.Poin||0), 0);
         const totalPeng = appData.pelanggaranList.filter(p => p.Tipe === 'Penghargaan').reduce((a, b) => a + Number(b.Poin||0), 0);
@@ -2060,7 +2268,7 @@
 
       // 3. Chart Keuangan Trend Dashboard
       const ctxKeu = document.getElementById('chart-keuangan-trend');
-      if (ctxKeu) {
+      if (ctxKeu && !isWali) {
         if (chartKeuanganTrendInstance) chartKeuanganTrendInstance.destroy();
         const totalSetor = appData.stats.totalSetor || 0;
         const totalTarik = appData.stats.totalTarik || 0;
@@ -2084,7 +2292,7 @@
 
       // Sub-Dashboard 1: Sebaran Asal Daerah Santri
       const ctxDaerah = document.getElementById('chart-santri-daerah');
-      if (ctxDaerah) {
+      if (ctxDaerah && !isWali) {
         if (chartSantriDaerahInstance) chartSantriDaerahInstance.destroy();
         const daerahMap = {};
         appData.santriList.forEach(s => {
@@ -2107,7 +2315,7 @@
 
       // Sub-Dashboard 2: Rasio & Tren Kedisiplinan
       const ctxDiscRatio = document.getElementById('chart-disc-ratio');
-      if (ctxDiscRatio) {
+      if (ctxDiscRatio && !isWali) {
         if (chartDiscRatioInstance) chartDiscRatioInstance.destroy();
         const pelCount = appData.pelanggaranList.filter(p => p.Tipe === 'Pelanggaran').length;
         const pengCount = appData.pelanggaranList.filter(p => p.Tipe === 'Penghargaan').length;
@@ -2123,7 +2331,7 @@
       }
 
       const ctxDiscTrend = document.getElementById('chart-disc-trend');
-      if (ctxDiscTrend) {
+      if (ctxDiscTrend && !isWali) {
         if (chartDiscTrendInstance) chartDiscTrendInstance.destroy();
         const trendMap = {};
         appData.pelanggaranList.forEach(d => {
@@ -2143,7 +2351,7 @@
         });
       }
 
-      // Sub-Dashboard 3: Daily Financial Trend (Dengan Filter Bulan & Urutan Kronologis)
+      // Sub-Dashboard 3: Daily Financial Trend
       const ctxKeuDaily = document.getElementById('chart-keuangan-daily');
       if (ctxKeuDaily) {
         if (chartKeuanganDailyInstance) chartKeuanganDailyInstance.destroy();
@@ -2152,19 +2360,23 @@
         const setorMap = {};
         const tarikMap = {};
 
-        appData.uangJajanList.forEach(u => {
+        let filteredKeuangan = [...appData.uangJajanList];
+        if (isWali && currentUser.linkedNis) {
+          filteredKeuangan = filteredKeuangan.filter(u => safeString(u.NIS) === safeString(currentUser.linkedNis));
+        }
+
+        filteredKeuangan.forEach(u => {
           const rawDate = (u.Tanggal || '').slice(0, 10);
           if (!rawDate) return;
 
           if (selectedMonth !== 'ALL' && !rawDate.startsWith(selectedMonth)) {
-            return; // Skip jika tidak sesuai bulan filter
+            return;
           }
 
           if (u['Jenis Transaksi'] === 'Setor') setorMap[rawDate] = (setorMap[rawDate] || 0) + Number(u.Jumlah||0);
           if (u['Jenis Transaksi'] === 'Tarik') tarikMap[rawDate] = (tarikMap[rawDate] || 0) + Number(u.Jumlah||0);
         });
 
-        // Urutkan tanggal secara kronologis (terlama ke terbaru)
         const sortedLabels = Array.from(new Set([...Object.keys(setorMap), ...Object.keys(tarikMap)])).sort();
 
         chartKeuanganDailyInstance = new Chart(ctxKeuDaily.getContext('2d'), {
@@ -2182,7 +2394,7 @@
 
       // Sub-Dashboard 4: Perizinan Trend
       const ctxIzinTrend = document.getElementById('chart-izin-trend');
-      if (ctxIzinTrend) {
+      if (ctxIzinTrend && !isWali) {
         if (chartIzinTrendInstance) chartIzinTrendInstance.destroy();
         const izinMap = {};
         appData.perizinanList.forEach(i => {
@@ -2204,14 +2416,25 @@
     }
 
     function renderSantriTable() {
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+
+      if (isWali && currentUser.linkedNis) {
+        // Wali Santri Specific View: Render Biodata Card Only
+        const child = appData.santriList.find(s => safeString(s.NIS) === safeString(currentUser.linkedNis));
+        if (child) {
+          document.getElementById('wali-bio-nama').innerText = child['Nama Lengkap'] || '-';
+          document.getElementById('wali-bio-nis').innerText = child.NIS || '-';
+          document.getElementById('wali-bio-kelas-angkatan').innerText = `${child.Kelas || '-'} / Angkatan ${child.Angkatan || '-'}`;
+          document.getElementById('wali-bio-status').innerText = child.Status || 'Aktif';
+          document.getElementById('wali-bio-nohp').innerText = child['No HP Orang Tua'] || '-';
+          document.getElementById('wali-bio-alamat').innerText = child.Alamat || '-';
+        }
+        return;
+      }
+
       const tbody = document.getElementById('table-santri-body');
       let list = [...appData.santriList];
 
-      if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
-        list = list.filter(s => safeString(s.NIS) === safeString(currentUser.linkedNis));
-      }
-
-      // Filter Pencarian Text & Kelas
       const searchQ = safeString(document.getElementById('search-santri')?.value).toLowerCase();
       const filterKelas = safeString(document.getElementById('filter-santri-kelas')?.value);
       const sortType = safeString(document.getElementById('sort-santri')?.value);
@@ -2223,7 +2446,6 @@
         list = list.filter(s => safeString(s.Kelas) === filterKelas);
       }
 
-      // Urutkan Data
       if (sortType === 'nama-asc') list.sort((a,b) => safeString(a['Nama Lengkap']).localeCompare(safeString(b['Nama Lengkap'])));
       if (sortType === 'nama-desc') list.sort((a,b) => safeString(b['Nama Lengkap']).localeCompare(safeString(a['Nama Lengkap'])));
       if (sortType === 'nis-asc') list.sort((a,b) => safeString(a.NIS).localeCompare(safeString(b.NIS)));
@@ -2332,8 +2554,19 @@
       const tbody = document.getElementById('table-keuangan-body');
       let list = [...appData.uangJajanList];
 
-      if (currentUser && currentUser.role === 'Orang Tua' && currentUser.linkedNis) {
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+
+      if (isWali && currentUser.linkedNis) {
         list = list.filter(u => safeString(u.NIS) === safeString(currentUser.linkedNis));
+
+        // Update Wali Santri Financial Sub-Dashboard Cards
+        const childSaldo = appData.saldoPerSantri[safeString(currentUser.linkedNis)] || 0;
+        const childSetor = list.filter(u => u['Jenis Transaksi'] === 'Setor').reduce((a, b) => a + Number(b.Jumlah||0), 0);
+        const childTarik = list.filter(u => u['Jenis Transaksi'] === 'Tarik').reduce((a, b) => a + Number(b.Jumlah||0), 0);
+
+        document.getElementById('wali-keuangan-saldo').innerText = "Rp " + childSaldo.toLocaleString('id-ID');
+        document.getElementById('wali-keuangan-setor').innerText = "Rp " + childSetor.toLocaleString('id-ID');
+        document.getElementById('wali-keuangan-tarik').innerText = "Rp " + childTarik.toLocaleString('id-ID');
       }
 
       const searchQ = safeString(document.getElementById('search-keuangan')?.value).toLowerCase();
@@ -2433,7 +2666,7 @@
             <td class="p-4 text-slate-500">${p.Alasan}</td>
             <td class="p-4 text-slate-500 italic">${p['Diinput Oleh'] || '-'}</td>
             <td class="p-4">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${p.Status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (p.Status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-blue-50 text-blue-700 border border-blue-200')}">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${p.Status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (p.Status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-200' : (p.Status === 'Ditolak' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-blue-50 text-blue-700 border border-blue-200'))}">
                 ${p.Status}
               </span>
             </td>
@@ -2652,22 +2885,54 @@
     function openModalPerizinan() {
       resetModalForm('modal-perizinan');
       toggleModal('modal-perizinan', true);
-      document.getElementById('modal-izn-title').innerText = "Pengajuan Izin Santri";
-      document.getElementById('m-izn-edit-id').value = "";
+
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+
+      if (isWali) {
+        document.getElementById('modal-izn-title').innerText = "Ajukan Perizinan Ananda";
+        document.getElementById('m-izn-edit-id').value = "";
+        
+        // Hide Student Select Dropdown for Wali Santri and lock to Linked NIS
+        document.getElementById('box-izn-nis-select')?.classList.add('hidden');
+        setSelectValue('m-izn-nis', currentUser.linkedNis);
+
+        // Limit options to only 2 specific categories for Wali Santri
+        document.querySelectorAll('#m-izn-kategori option.opt-admin-only').forEach(opt => {
+          opt.disabled = true;
+          opt.style.display = 'none';
+        });
+
+        setSelectValue('m-izn-kategori', 'Izin Datang Bertemu Santri');
+
+      } else {
+        document.getElementById('modal-izn-title').innerText = "Pengajuan Izin Santri";
+        document.getElementById('m-izn-edit-id').value = "";
+        document.getElementById('box-izn-nis-select')?.classList.remove('hidden');
+
+        document.querySelectorAll('#m-izn-kategori option.opt-admin-only').forEach(opt => {
+          opt.disabled = false;
+          opt.style.display = 'block';
+        });
+
+        setSelectValue('m-izn-kategori', 'Izin Keluar Pondok');
+      }
     }
 
     async function handleAddPerizinan(e) {
       e.preventDefault();
       showLoading("Memproses Data...", "Mohon tunggu sebentar");
 
+      const isWali = currentUser && currentUser.role === 'Orang Tua';
+      const targetNis = isWali ? currentUser.linkedNis : document.getElementById('m-izn-nis').value;
+
       const formData = {
         editIndex: document.getElementById('m-izn-edit-id').value,
-        nis: document.getElementById('m-izn-nis').value,
+        nis: targetNis,
         kategori: document.getElementById('m-izn-kategori').value,
         mulai: document.getElementById('m-izn-mulai').value,
         selesai: document.getElementById('m-izn-selesai').value,
         alasan: document.getElementById('m-izn-alasan').value,
-        diinputOleh: currentUser ? currentUser.nama : "Admin"
+        diinputOleh: currentUser ? currentUser.nama : "Wali Santri"
       };
 
       try {
@@ -2940,7 +3205,7 @@
 
     function downloadPDFReport() {
       const element = document.getElementById('pdf-printable-area');
-      const selectVal = document.getElementById('select-report-santri').value;
+      const selectVal = currentUser && currentUser.role === 'Orang Tua' ? currentUser.linkedNis : document.getElementById('select-report-santri').value;
       if (!selectVal) return;
 
       showLoading("Memproses Data...", "Menyiapkan dokumen PDF");
