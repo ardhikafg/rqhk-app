@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Informasi Santri - Rumah Al-Qur'an Husnul Khatimah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rumah Al-Qur'an Husnul Khatimah — Sistem Informasi Santri</title>
 
   <!-- PWA MANIFEST & COLOR -->
   <link rel="manifest" href="manifest.json">
@@ -65,9 +65,10 @@
       font-family: 'Plus Jakarta Sans', sans-serif; 
       background-color: #f8fafc;
       color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .fade-in { animation: fadeIn 0.25s ease-out forwards; }
+    .fade-in { animation: fadeIn 0.2s ease-out forwards; }
     .slide-up { animation: slideUp 0.25s ease-out forwards; }
 
     @keyframes fadeIn {
@@ -75,45 +76,53 @@
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .glass-light { 
-      background: rgba(255, 255, 255, 0.98); 
-      backdrop-filter: blur(16px); 
-      border: 1px solid rgba(226, 232, 240, 0.9); 
+    .glass-card { 
+      background: #ffffff; 
+      border: 1px solid #f1f5f9; 
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
     }
 
-    .card-hover { transition: all 0.2s ease; }
+    .card-hover { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
     .card-hover:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px -8px rgba(5, 150, 105, 0.12);
+      box-shadow: 0 12px 24px -6px rgba(5, 150, 105, 0.12);
     }
 
+    /* Fixed TomSelect Styling - No Layout Shift */
+    .ts-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
     .ts-control {
-      border-radius: 0.75rem !important;
+      border-radius: 0.85rem !important;
       padding: 0.65rem 0.85rem !important;
-      border-color: #e2e8f0 !important;
+      border: 1px solid #e2e8f0 !important;
       font-size: 0.75rem !important;
       background-color: #ffffff !important;
       box-shadow: none !important;
+      min-height: 42px !important;
+      width: 100% !important;
     }
     .ts-wrapper.focus .ts-control {
       border-color: #059669 !important;
       box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
     }
     .ts-dropdown {
-      border-radius: 0.75rem !important;
+      border-radius: 0.85rem !important;
       font-size: 0.75rem !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15) !important;
       border: 1px solid #e2e8f0 !important;
       z-index: 999999 !important;
       overflow: hidden !important;
+      margin-top: 4px !important;
     }
 
     /* Active feedback button press animation */
-    .btn-press { transition: transform 0.1s ease; }
+    .btn-press { transition: transform 0.1s ease, background-color 0.15s ease; }
     .btn-press:active { transform: scale(0.96); }
 
     /* Tag pill styling for collective mode */
@@ -131,12 +140,23 @@
       margin-bottom: 0.35rem;
     }
 
+    /* Mobile Page Panel Mode */
+    .mobile-full-panel {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 60;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
     @media print {
       .pdf-page-break { page-break-before: always; }
       .no-break { page-break-inside: avoid; }
     }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: #f8fafc; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #059669; }
@@ -144,8 +164,8 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-800 pb-20 md:pb-0">
 
-  <!-- INSTANT MINIMALIST LOADING OVERLAY (NO DELAY) -->
-  <div id="global-loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-md hidden transition-opacity duration-75">
+  <!-- INSTANT MINIMALIST LOADING OVERLAY -->
+  <div id="global-loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-md hidden">
     <div class="bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 flex flex-col items-center space-y-3 max-w-xs w-full text-center slide-up">
       <div class="w-10 h-10 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
       <div>
@@ -160,11 +180,8 @@
 
   <!-- PORTAL LOGIN -->
   <div id="login-portal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-emerald-50/90 via-slate-50 to-amber-50/50 backdrop-blur-md">
-    <div class="w-full max-w-md p-6 sm:p-8 rounded-3xl glass-light shadow-2xl border border-white relative overflow-hidden slide-up">
+    <div class="w-full max-w-md p-6 sm:p-8 rounded-3xl glass-card shadow-2xl relative overflow-hidden slide-up">
       
-      <div class="absolute -top-20 -right-20 w-44 h-44 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-20 -left-20 w-44 h-44 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
-
       <div class="text-center mb-6 sm:mb-8 relative z-10">
         <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 rounded-2xl bg-white border border-emerald-100 p-2 shadow-md flex items-center justify-center">
           <img src="https://lh3.googleusercontent.com/d/1jnTrqDfxmJGN6qkIhB_yIKi2iNAWZvBL" 
@@ -172,8 +189,9 @@
                class="max-h-full max-w-full object-contain rounded-xl"
                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-emerald-700 text-2xl font-extrabold\'>RQ</div>';">
         </div>
-        <h1 class="text-base font-extrabold tracking-tight text-slate-900">Rumah Al-Qur'an Husnul Khatimah</h1>
-        <p class="text-[10px] text-emerald-700 font-bold tracking-widest mt-0.5 uppercase">Sistem Informasi Santri</p>
+        <h1 class="text-base font-extrabold tracking-tight text-slate-900 leading-tight">Rumah Al-Qur'an</h1>
+        <h2 class="text-xs font-bold text-emerald-700 tracking-wider uppercase mt-0.5">Husnul Khatimah</h2>
+        <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest">Sistem Informasi Santri</p>
       </div>
 
       <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
@@ -196,9 +214,9 @@
         </div>
 
         <div class="flex items-center justify-between text-[11px]">
-          <span class="text-slate-400 italic">Terenkripsi Sesi (24 Jam)</span>
+          <span class="text-slate-400 italic">Sesi Aman (24 Jam)</span>
           <button type="button" onclick="contactAdminWA()" class="text-emerald-700 hover:text-emerald-800 hover:underline font-semibold transition">
-            Lupa PIN / Butuh Akses?
+            Lupa PIN / Akses?
           </button>
         </div>
 
@@ -211,27 +229,21 @@
     </div>
   </div>
 
-  <!-- OVERLAY SIDEBAR MOBILE -->
-  <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs z-30 hidden md:hidden"></div>
-
   <!-- MAIN APP CONTAINER -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 relative overflow-x-hidden">
 
     <!-- MOBILE HEADER BAR -->
     <header id="mobile-header" class="flex md:hidden sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 items-center justify-between shadow-xs w-full">
       <div class="flex items-center space-x-2.5">
-        <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition btn-press">
-          <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
         <button onclick="switchTab('dashboard')" class="flex items-center space-x-2 text-left focus:outline-none">
-          <div class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-100 p-1 flex items-center justify-center flex-shrink-0">
+          <div class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 p-1 flex items-center justify-center flex-shrink-0 shadow-xs">
             <img src="https://lh3.googleusercontent.com/d/1jnTrqDfxmJGN6qkIhB_yIKi2iNAWZvBL" 
                  alt="Logo" class="max-h-full max-w-full object-contain"
                  onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-emerald-700 font-bold text-xs\'>RQ</span>';">
           </div>
           <div>
             <span class="font-extrabold text-xs tracking-tight text-slate-900 block leading-none">Rumah Al-Qur'an</span>
-            <span class="text-[9px] text-emerald-700 font-bold tracking-wider uppercase block">SI SANTRI</span>
+            <span class="text-[9px] text-emerald-700 font-bold tracking-wider uppercase block mt-0.5">Husnul Khatimah</span>
           </div>
         </button>
       </div>
@@ -244,23 +256,20 @@
       </button>
     </header>
 
-    <!-- SIDEBAR NAVIGASI DESKTOP -->
-    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 bg-white text-slate-800 flex-shrink-0 flex flex-col justify-between p-5 border-r border-slate-200 shadow-lg md:shadow-none transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <!-- SIDEBAR NAVIGASI DESKTOP (COLLAPSIBLE) -->
+    <aside id="sidebar" class="hidden md:flex w-64 bg-white text-slate-800 flex-shrink-0 flex-col justify-between p-5 border-r border-slate-200 transition-all duration-300 ease-in-out">
       <div>
         <div class="flex items-center justify-between mb-8 px-1 w-full">
           <button onclick="switchTab('dashboard')" class="flex items-center space-x-3 text-left focus:outline-none">
-            <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 p-1.5 flex items-center justify-center flex-shrink-0 shadow-sm">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 p-1.5 flex items-center justify-center flex-shrink-0 shadow-xs">
               <img src="https://lh3.googleusercontent.com/d/1jnTrqDfxmJGN6qkIhB_yIKi2iNAWZvBL" 
                    alt="Logo" class="max-h-full max-w-full object-contain rounded"
                    onerror="this.onerror=null; this.parentElement.innerHTML='<i data-lucide=\'book-open\' class=\'w-5 h-5 text-emerald-600\'></i>';">
             </div>
             <div>
               <h1 class="font-extrabold text-xs tracking-tight text-slate-900 leading-tight">Rumah Al-Qur'an</h1>
-              <span class="text-[10px] text-emerald-600 font-bold tracking-wider block">SI SANTRI</span>
+              <span class="text-[10px] text-emerald-600 font-bold tracking-wider block">Husnul Khatimah</span>
             </div>
-          </button>
-          <button onclick="closeSidebar()" class="md:hidden p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition focus:outline-none">
-            <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
 
@@ -294,7 +303,7 @@
 
       <div class="mt-8 border-t border-slate-100 pt-4 px-1 flex items-center justify-between">
         <div class="flex items-center space-x-2.5 overflow-hidden">
-          <div id="user-avatar" class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-extrabold text-xs flex-shrink-0 shadow-sm">
+          <div id="user-avatar" class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-extrabold text-xs flex-shrink-0 shadow-2xs">
             A
           </div>
           <div class="truncate">
@@ -308,31 +317,31 @@
       </div>
     </aside>
 
-    <!-- MOBILE NATIVE BOTTOM NAVIGATION BAR -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 flex justify-around items-center shadow-lg">
+    <!-- MOBILE NATIVE BOTTOM NAVIGATION BAR (BANKING APP STYLE) -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-1.5 flex justify-between items-center shadow-lg">
       <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="flex flex-col items-center justify-center py-1 px-2 text-emerald-600 font-bold">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        <i data-lucide="home" class="w-4 h-4"></i>
         <span class="text-[9px] mt-0.5">Beranda</span>
       </button>
-      <button onclick="switchTab('santri')" id="m-nav-santri" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
-        <i data-lucide="users" class="w-4 h-4"></i>
-        <span class="text-[9px] mt-0.5">Santri</span>
-      </button>
+
       <button onclick="switchTab('kedisiplinan')" id="m-nav-kedisiplinan" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
         <i data-lucide="shield-alert" class="w-4 h-4"></i>
         <span class="text-[9px] mt-0.5">Disiplin</span>
       </button>
+
+      <!-- CENTERED FLOATING QUICK ACTION BUTTON -->
+      <button onclick="openQuickActionSheet()" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-600 text-white p-3 rounded-full shadow-lg shadow-emerald-600/30 border-2 border-white btn-press">
+        <i data-lucide="plus" class="w-5 h-5"></i>
+      </button>
+
       <button onclick="switchTab('keuangan')" id="m-nav-keuangan" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
         <i data-lucide="wallet" class="w-4 h-4"></i>
         <span class="text-[9px] mt-0.5">Keuangan</span>
       </button>
-      <button onclick="switchTab('perizinan')" id="m-nav-perizinan" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
-        <i data-lucide="calendar-days" class="w-4 h-4"></i>
-        <span class="text-[9px] mt-0.5">Izin</span>
-      </button>
-      <button onclick="switchTab('laporan')" id="m-nav-laporan" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
-        <i data-lucide="file-bar-chart" class="w-4 h-4"></i>
-        <span class="text-[9px] mt-0.5">Laporan</span>
+
+      <button onclick="toggleModal('modal-quick-menu', true)" id="m-nav-more" class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-slate-700">
+        <i data-lucide="grid" class="w-4 h-4"></i>
+        <span class="text-[9px] mt-0.5">Menu</span>
       </button>
     </div>
 
@@ -340,22 +349,22 @@
     <main class="flex-1 p-4 md:p-8 overflow-y-auto w-full max-w-7xl mx-auto">
       
       <!-- Top Bar Header Desktop -->
-      <div class="hidden md:flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm fade-in">
+      <div class="hidden md:flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-xs fade-in">
         <div class="flex items-center space-x-3">
-          <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition focus:outline-none">
-            <i data-lucide="menu" class="w-5 h-5"></i>
+          <button onclick="toggleDesktopSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition focus:outline-none" title="Buka/Tutup Sidebar">
+            <i data-lucide="panel-left" class="w-5 h-5"></i>
           </button>
           <div>
             <h2 id="page-title" class="text-base md:text-lg font-bold text-slate-900 tracking-tight">Beranda Utama</h2>
-            <p id="page-subtitle" class="text-[11px] md:text-xs text-slate-500">Sistem Informasi Santri Rumah Al-Qur'an Husnul Khatimah.</p>
+            <p id="page-subtitle" class="text-[11px] md:text-xs text-slate-500">Rumah Al-Qur'an Husnul Khatimah — Sistem Informasi Santri</p>
           </div>
         </div>
         <div class="flex items-center space-x-2.5">
-          <div id="role-badge" class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[11px] font-bold flex items-center space-x-1.5 shadow-sm">
+          <div id="role-badge" class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[11px] font-bold flex items-center space-x-1.5 shadow-2xs">
             <i data-lucide="shield" class="w-3.5 h-3.5"></i>
             <span id="role-badge-text">Mode Akses: Full Administrator</span>
           </div>
-          <button onclick="refreshData()" class="flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition btn-press shadow-sm">
+          <button onclick="refreshData()" class="flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition btn-press shadow-2xs">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i>
             <span class="hidden sm:inline">Refresh</span>
           </button>
@@ -365,9 +374,41 @@
       <!-- TAB 1: DASHBOARD / BERANDA -->
       <div id="tab-dashboard" class="tab-content fade-in space-y-6">
         
+        <!-- MOBILE QUICK ACTION GRID (BANKING APP STYLE) -->
+        <div class="md:hidden bg-gradient-to-br from-emerald-700 to-teal-800 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Selamat Datang</span>
+              <h3 class="text-base font-extrabold" id="m-dash-user-name">Admin Utama</h3>
+            </div>
+            <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center font-bold text-xs border border-white/20">
+              RQ
+            </div>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 pt-2 border-t border-white/10 text-center text-[10px] font-semibold">
+            <button onclick="switchTab('santri')" class="flex flex-col items-center justify-center p-2 rounded-2xl bg-white/10 hover:bg-white/20 transition">
+              <i data-lucide="users" class="w-5 h-5 mb-1 text-emerald-300"></i>
+              <span>Data Santri</span>
+            </button>
+            <button onclick="switchTab('kedisiplinan')" class="flex flex-col items-center justify-center p-2 rounded-2xl bg-white/10 hover:bg-white/20 transition">
+              <i data-lucide="shield-alert" class="w-5 h-5 mb-1 text-emerald-300"></i>
+              <span>Disiplin</span>
+            </button>
+            <button onclick="switchTab('keuangan')" class="flex flex-col items-center justify-center p-2 rounded-2xl bg-white/10 hover:bg-white/20 transition">
+              <i data-lucide="wallet" class="w-5 h-5 mb-1 text-emerald-300"></i>
+              <span>Keuangan</span>
+            </button>
+            <button onclick="switchTab('laporan')" class="flex flex-col items-center justify-center p-2 rounded-2xl bg-white/10 hover:bg-white/20 transition">
+              <i data-lucide="file-bar-chart" class="w-5 h-5 mb-1 text-emerald-300"></i>
+              <span>Laporan</span>
+            </button>
+          </div>
+        </div>
+
         <!-- ADMIN & PIMPINAN STAT CARDS (ROW 1) -->
         <div id="dash-admin-stats-1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 card-hover">
+          <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200 card-hover">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Santri</span>
               <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="users" class="w-4 h-4"></i></div>
@@ -376,7 +417,7 @@
             <p class="text-[11px] text-slate-400 mt-1">Santri aktif binaan pondok</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 card-hover">
+          <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200 card-hover">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kas Tunai Santri</span>
               <div class="p-2 bg-teal-50 text-teal-600 rounded-xl"><i data-lucide="banknote" class="w-4 h-4"></i></div>
@@ -385,7 +426,7 @@
             <p class="text-[11px] text-teal-600 font-medium mt-1">Sisa kas jajan fisik santri</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 card-hover">
+          <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200 card-hover">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kas Rekening Musyrif</span>
               <div class="p-2 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="credit-card" class="w-4 h-4"></i></div>
@@ -394,7 +435,7 @@
             <p class="text-[11px] text-amber-600 font-medium mt-1">Sisa saldo transfer musyrif</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 card-hover">
+          <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200 card-hover">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Izin Aktif</span>
               <div class="p-2 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
@@ -426,7 +467,7 @@
             <p class="text-[10px] text-slate-400 mt-1">Tabungan jajan terendah</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Akumulasi Setor</span>
               <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="arrow-down-left" class="w-4 h-4"></i></div>
@@ -435,7 +476,7 @@
             <p class="text-[10px] text-slate-400 mt-1">Total titipan orang tua</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Penarikan Jajan</span>
               <div class="p-2 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></div>
@@ -456,7 +497,7 @@
             <p class="text-[11px] text-emerald-100 mt-1">Tabungan jajan ananda saat ini</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Poin Pelanggaran</span>
               <div class="p-2 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="shield-alert" class="w-4 h-4"></i></div>
@@ -465,7 +506,7 @@
             <p class="text-[11px] text-slate-400 mt-1">Akumulasi catatan pelanggaran</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Poin Penghargaan</span>
               <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="award" class="w-4 h-4"></i></div>
@@ -474,7 +515,7 @@
             <p class="text-[11px] text-slate-400 mt-1">Akumulasi prestasi & adab</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div class="flex justify-between items-center mb-2">
               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Status Keberadaan</span>
               <div class="p-2 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
@@ -486,7 +527,7 @@
 
         <!-- GRAFIK STATISTIK DASHBOARD UTAMA (ADMIN & PIMPINAN) -->
         <div id="dash-admin-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div class="flex justify-between items-center mb-3">
               <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Status Perizinan Santri</h4>
               <i data-lucide="pie-chart" class="w-4 h-4 text-slate-400"></i>
@@ -496,7 +537,7 @@
             </div>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div class="flex justify-between items-center mb-3">
               <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Pelanggaran vs Penghargaan</h4>
               <i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-400"></i>
@@ -506,7 +547,7 @@
             </div>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div class="flex justify-between items-center mb-3">
               <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Rasio Setoran vs Penarikan</h4>
               <i data-lucide="line-chart" class="w-4 h-4 text-slate-400"></i>
@@ -519,7 +560,7 @@
 
         <!-- ACTIVITY FEEDS -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <h4 class="font-bold text-slate-900 text-xs mb-3 uppercase tracking-wider flex items-center justify-between">
               <span>Transaksi Keuangan Terbaru</span>
               <i data-lucide="receipt" class="w-4 h-4 text-slate-400"></i>
@@ -527,7 +568,7 @@
             <div id="dashboard-recent-keuangan" class="space-y-2.5"></div>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <h4 class="font-bold text-slate-900 text-xs mb-3 uppercase tracking-wider flex items-center justify-between">
               <span>Perizinan Terkini</span>
               <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
@@ -535,7 +576,7 @@
             <div id="dashboard-recent-izin" class="space-y-2.5"></div>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <h4 class="font-bold text-slate-900 text-xs mb-3 uppercase tracking-wider flex items-center justify-between">
               <span>Catatan Kedisiplinan Terbaru</span>
               <i data-lucide="award" class="w-4 h-4 text-slate-400"></i>
@@ -551,21 +592,21 @@
         
         <!-- ADMIN & PIMPINAN SUB DASHBOARD SANTRI -->
         <div id="santri-sub-dash" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Total Santri Aktif</span>
               <h4 id="sub-santri-total" class="text-xl font-black text-slate-800">0</h4>
             </div>
             <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="users" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Jumlah Kelas/Takhassus</span>
               <h4 id="sub-santri-kelas" class="text-xl font-black text-slate-800">0</h4>
             </div>
             <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="graduation-cap" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Angkatan Terbaru</span>
               <h4 id="sub-santri-angkatan" class="text-xl font-black text-slate-800">-</h4>
@@ -575,7 +616,7 @@
         </div>
 
         <!-- GRAFIK REGIONAL (ADMIN & PIMPINAN ONLY) -->
-        <div id="santri-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="santri-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Sebaran Asal Daerah Santri</h4>
           <div class="relative h-48 w-full flex items-center justify-center">
             <canvas id="chart-santri-daerah"></canvas>
@@ -583,9 +624,9 @@
         </div>
 
         <!-- WALI SANTRI BIODATA CARD (ONLY FOR WALI SANTRI) -->
-        <div id="wali-biodata-card" class="hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div id="wali-biodata-card" class="hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
           <div class="flex items-center space-x-4 border-b border-slate-100 pb-4">
-            <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-black text-xl border border-emerald-100 shadow-sm">
+            <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-black text-xl border border-emerald-100 shadow-xs">
               <i data-lucide="user" class="w-7 h-7 text-emerald-600"></i>
             </div>
             <div>
@@ -616,29 +657,33 @@
         </div>
 
         <!-- FILTER & ACTION BAR SANTRI -->
-        <div id="santri-filter-bar" class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="santri-filter-bar" class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
-            <div class="relative">
-              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+            <div class="relative w-full">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400 z-10"></i>
               <input type="text" id="search-santri" oninput="renderSantriTable()" placeholder="Cari NIS atau Nama..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
             </div>
-            <select id="filter-santri-kelas" onchange="renderSantriTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="">-- Semua Kelas --</option>
-            </select>
-            <select id="sort-santri" onchange="renderSantriTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="nama-asc">Urutkan: Nama (A - Z)</option>
-              <option value="nama-desc">Urutkan: Nama (Z - A)</option>
-              <option value="nis-asc">Urutkan: NIS (Terkecil)</option>
-              <option value="nis-desc">Urutkan: NIS (Terbesar)</option>
-            </select>
+            <div class="w-full min-w-0">
+              <select id="filter-santri-kelas" onchange="renderSantriTable()" class="search-select w-full">
+                <option value="">-- Semua Kelas --</option>
+              </select>
+            </div>
+            <div class="w-full min-w-0">
+              <select id="sort-santri" onchange="renderSantriTable()" class="search-select w-full">
+                <option value="nama-asc">Urutkan: Nama (A - Z)</option>
+                <option value="nama-desc">Urutkan: Nama (Z - A)</option>
+                <option value="nis-asc">Urutkan: NIS (Terkecil)</option>
+                <option value="nis-desc">Urutkan: NIS (Terbesar)</option>
+              </select>
+            </div>
           </div>
-          <button id="btn-add-santri" onclick="openModalSantri()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-sm whitespace-nowrap">
+          <button id="btn-add-santri" onclick="openFormPage('modal-santri')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-xs whitespace-nowrap">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
             <span>Tambah Santri Baru</span>
           </button>
         </div>
 
-        <div id="santri-table-container" class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div id="santri-table-container" class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
@@ -663,21 +708,21 @@
         
         <!-- SUB DASHBOARD KEDISIPLINAN -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Total Poin Pelanggaran</span>
               <h4 id="sub-disc-pelanggaran" class="text-xl font-black text-rose-600">0 Poin</h4>
             </div>
             <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="shield-alert" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Total Poin Penghargaan</span>
               <h4 id="sub-disc-penghargaan" class="text-xl font-black text-emerald-600">0 Poin</h4>
             </div>
             <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="award" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Total Catatan Rekam</span>
               <h4 id="sub-disc-total" class="text-xl font-black text-slate-800">0</h4>
@@ -688,13 +733,13 @@
 
         <!-- GRAFIK SUB DASHBOARD KEDISIPLINAN (ADMIN & PIMPINAN ONLY) -->
         <div id="disc-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Rasio Pelanggaran vs Penghargaan</h4>
             <div class="relative h-44 w-full flex items-center justify-center">
               <canvas id="chart-disc-ratio"></canvas>
             </div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Kedisiplinan Harian</h4>
             <div class="relative h-44 w-full">
               <canvas id="chart-disc-trend"></canvas>
@@ -703,30 +748,34 @@
         </div>
 
         <!-- FILTER & ACTION BAR KEDISIPLINAN -->
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
-            <div class="relative">
-              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+            <div class="relative w-full">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400 z-10"></i>
               <input type="text" id="search-disc" oninput="renderKedisiplinanTable()" placeholder="Cari Ket / Kategori..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
             </div>
-            <select id="filter-disc-tipe" onchange="renderKedisiplinanTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="">-- Semua Tipe --</option>
-              <option value="Pelanggaran">Pelanggaran</option>
-              <option value="Penghargaan">Penghargaan</option>
-            </select>
-            <select id="sort-disc" onchange="renderKedisiplinanTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
-              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
-              <option value="poin-desc">Poin: Terbesar -> Terkecil</option>
-            </select>
+            <div class="w-full min-w-0">
+              <select id="filter-disc-tipe" onchange="renderKedisiplinanTable()" class="search-select w-full">
+                <option value="">-- Semua Tipe --</option>
+                <option value="Pelanggaran">Pelanggaran</option>
+                <option value="Penghargaan">Penghargaan</option>
+              </select>
+            </div>
+            <div class="w-full min-w-0">
+              <select id="sort-disc" onchange="renderKedisiplinanTable()" class="search-select w-full">
+                <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+                <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+                <option value="poin-desc">Poin: Terbesar -> Terkecil</option>
+              </select>
+            </div>
           </div>
-          <button id="btn-add-disc" onclick="openModalKedisiplinan()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-sm whitespace-nowrap">
+          <button id="btn-add-disc" onclick="openFormPage('modal-kedisiplinan')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-xs whitespace-nowrap">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>Tambah Catatan</span>
           </button>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
@@ -752,19 +801,19 @@
         
         <!-- SUB DASHBOARD KEUANGAN ADMIN & PIMPINAN -->
         <div id="keuangan-admin-sub" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Kas Fisik Tunai</span>
             <h4 id="sub-keuangan-cash" class="text-lg font-black text-teal-600 mt-1">Rp 0</h4>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Kas Rekening Musyrif</span>
             <h4 id="sub-keuangan-musyrif" class="text-lg font-black text-amber-600 mt-1">Rp 0</h4>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Total Accum. Setoran</span>
             <h4 id="sub-keuangan-setor" class="text-lg font-black text-emerald-600 mt-1">Rp 0</h4>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Total Penarikan Jajan</span>
             <h4 id="sub-keuangan-tarik" class="text-lg font-black text-rose-600 mt-1">Rp 0</h4>
           </div>
@@ -772,22 +821,22 @@
 
         <!-- SUB DASHBOARD KEUANGAN WALI SANTRI -->
         <div id="keuangan-wali-sub" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-4 rounded-2xl shadow-sm">
+          <div class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-4 rounded-2xl shadow-xs">
             <span class="text-[10px] font-extrabold text-emerald-100 uppercase">Sisa Saldo Jajan Ananda</span>
             <h4 id="wali-keuangan-saldo" class="text-xl font-black mt-1">Rp 0</h4>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Total Setor Titipan</span>
             <h4 id="wali-keuangan-setor" class="text-lg font-black text-emerald-600 mt-1">Rp 0</h4>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Total Jajan Ditarik</span>
             <h4 id="wali-keuangan-tarik" class="text-lg font-black text-rose-600 mt-1">Rp 0</h4>
           </div>
         </div>
 
         <!-- GRAFIK TREN KEUANGAN HARIAN -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Grafik Tren Transaksi Keuangan Harian</h4>
             <div class="flex items-center space-x-2">
@@ -804,49 +853,53 @@
 
         <!-- ACTION BUTTON CARDS (ADMIN ONLY) -->
         <div id="keuangan-action-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
             <div>
               <h4 class="font-bold text-slate-900 text-xs">Setor / Tarik Uang Jajan</h4>
               <p class="text-[11px] text-slate-500 mt-0.5">Pencatatan uang jajan per santri / kolektif</p>
             </div>
-            <button id="btn-add-uj" onclick="openModalUangJajan('Setor')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition btn-press shadow-sm">
+            <button id="btn-add-uj" onclick="openModalUangJajan('Setor')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition btn-press shadow-xs">
               Input Transaksi
             </button>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
             <div>
               <h4 class="font-bold text-slate-900 text-xs">Mutasi Rekening Musyrif ke Kas Cash</h4>
               <p class="text-[11px] text-slate-500 mt-0.5">Penarikan dana transfer ke dana fisik tunai</p>
             </div>
-            <button id="btn-add-mutasi" onclick="openModalMutasi()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition btn-press shadow-sm">
+            <button id="btn-add-mutasi" onclick="openFormPage('modal-mutasi')" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition btn-press shadow-xs">
               Mutasi Dana
             </button>
           </div>
         </div>
 
         <!-- FILTER & ACTION BAR KEUANGAN -->
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
-            <div class="relative">
-              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+            <div class="relative w-full">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400 z-10"></i>
               <input type="text" id="search-keuangan" oninput="renderKeuanganTable()" placeholder="Cari Ket / Metode..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
             </div>
-            <select id="filter-keuangan-jenis" onchange="renderKeuanganTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="">-- Semua Jenis Transaksi --</option>
-              <option value="Setor">Setor Uang</option>
-              <option value="Tarik">Tarik / Jajan</option>
-              <option value="Mutasi">Mutasi Musyrif-Cash</option>
-            </select>
-            <select id="sort-keuangan" onchange="renderKeuanganTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
-              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
-              <option value="nominal-desc">Jumlah: Terbesar -> Terkecil</option>
-            </select>
+            <div class="w-full min-w-0">
+              <select id="filter-keuangan-jenis" onchange="renderKeuanganTable()" class="search-select w-full">
+                <option value="">-- Semua Jenis Transaksi --</option>
+                <option value="Setor">Setor Uang</option>
+                <option value="Tarik">Tarik / Jajan</option>
+                <option value="Mutasi">Mutasi Musyrif-Cash</option>
+              </select>
+            </div>
+            <div class="w-full min-w-0">
+              <select id="sort-keuangan" onchange="renderKeuanganTable()" class="search-select w-full">
+                <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+                <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+                <option value="nominal-desc">Jumlah: Terbesar -> Terkecil</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
           <div class="p-4 border-b border-slate-100 font-bold text-xs text-slate-800 uppercase tracking-wider">Riwayat Transaksi Keuangan</div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
@@ -873,21 +926,21 @@
         
         <!-- SUB DASHBOARD PERIZINAN -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Izin Aktif Disetujui</span>
               <h4 id="sub-izin-aktif" class="text-xl font-black text-emerald-600">0</h4>
             </div>
             <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Pengajuan Pending</span>
               <h4 id="sub-izin-pending" class="text-xl font-black text-amber-600">0</h4>
             </div>
             <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
             <div>
               <span class="text-[10px] font-bold text-slate-400 uppercase">Sudah Kembali</span>
               <h4 id="sub-izin-kembali" class="text-xl font-black text-blue-600">0</h4>
@@ -897,7 +950,7 @@
         </div>
 
         <!-- GRAFIK TREN PERIZINAN (ADMIN & PIMPINAN ONLY) -->
-        <div id="izin-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="izin-chart-box" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Grafik Tren Frekuensi Perizinan</h4>
           <div class="relative h-48 w-full">
             <canvas id="chart-izin-trend"></canvas>
@@ -905,31 +958,35 @@
         </div>
 
         <!-- FILTER & ACTION BAR PERIZINAN -->
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1">
-            <div class="relative">
-              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+            <div class="relative w-full">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400 z-10"></i>
               <input type="text" id="search-perizinan" oninput="renderPerizinanTable()" placeholder="Cari Alasan / Kategori..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
             </div>
-            <select id="filter-perizinan-status" onchange="renderPerizinanTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="">-- Semua Status --</option>
-              <option value="Disetujui">Disetujui</option>
-              <option value="Pending">Pending</option>
-              <option value="Kembali">Kembali</option>
-              <option value="Ditolak">Ditolak</option>
-            </select>
-            <select id="sort-perizinan" onchange="renderPerizinanTable()" class="search-select px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-              <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
-              <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
-            </select>
+            <div class="w-full min-w-0">
+              <select id="filter-perizinan-status" onchange="renderPerizinanTable()" class="search-select w-full">
+                <option value="">-- Semua Status --</option>
+                <option value="Disetujui">Disetujui</option>
+                <option value="Pending">Pending</option>
+                <option value="Kembali">Kembali</option>
+                <option value="Ditolak">Ditolak</option>
+              </select>
+            </div>
+            <div class="w-full min-w-0">
+              <select id="sort-perizinan" onchange="renderPerizinanTable()" class="search-select w-full">
+                <option value="tgl-desc">Tanggal: Terbaru -> Terlama</option>
+                <option value="tgl-asc">Tanggal: Terlama -> Terbaru</option>
+              </select>
+            </div>
           </div>
-          <button id="btn-add-izin" onclick="openModalPerizinan()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-sm whitespace-nowrap">
+          <button id="btn-add-izin" onclick="openFormPage('modal-perizinan')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition btn-press shadow-xs whitespace-nowrap">
             <i data-lucide="file-plus" class="w-4 h-4"></i>
             <span id="btn-label-izin">Buat Izin Baru</span>
           </button>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
@@ -952,11 +1009,11 @@
 
       <!-- TAB 6: LAPORAN & INFOGRAFIS AUTOMATIS -->
       <div id="tab-laporan" class="tab-content hidden fade-in space-y-6">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <label id="lbl-report-select" class="text-xs font-bold text-slate-700 block mb-2 uppercase tracking-wider">Pilih Santri untuk Menampilkan Laporan Otomatis:</label>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div id="box-select-report-santri">
-              <select id="select-report-santri" class="w-full select-santri-options">
+            <div id="box-select-report-santri" class="w-full min-w-0">
+              <select id="select-report-santri" class="w-full select-santri-options search-select">
               </select>
             </div>
             <div id="box-report-actions" class="md:col-span-2 flex items-center justify-end">
@@ -972,7 +1029,7 @@
         <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md overflow-hidden" id="pdf-printable-area">
           <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
             <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white rounded-xl p-1 border border-emerald-100 shadow-sm flex items-center justify-center flex-shrink-0">
+              <div class="w-12 h-12 bg-white rounded-xl p-1 border border-emerald-100 shadow-xs flex items-center justify-center flex-shrink-0">
                 <img src="https://lh3.googleusercontent.com/d/1jnTrqDfxmJGN6qkIhB_yIKi2iNAWZvBL" 
                      alt="Logo" class="max-h-full max-w-full object-contain" crossOrigin="anonymous"
                      onerror="this.onerror=null; this.parentElement.innerHTML='<svg class=\'w-8 h-8 text-emerald-600\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><path d=\'M12 2L2 7l10 5 10-5-10-5z\'/><path d=\'M2 17l10 5 10-5\'/><path d=\'M2 12l10 5 10-5\'/></svg>';">
@@ -1000,19 +1057,103 @@
     </main>
   </div>
 
+  <!-- MOBILE QUICK ACTION SHEET (BANKING APP STYLE) -->
+  <div id="modal-quick-sheet" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-end justify-center z-50">
+    <div class="bg-white rounded-t-3xl max-w-md w-full p-6 shadow-2xl slide-up space-y-4">
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-extrabold text-slate-900">Aksi Cepat Transaksi & Catatan</h3>
+        <button onclick="toggleModal('modal-quick-sheet', false)" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button onclick="toggleModal('modal-quick-sheet', false); openModalUangJajan('Setor');" class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex flex-col items-center text-center hover:bg-emerald-100 transition btn-press">
+          <i data-lucide="arrow-down-left" class="w-6 h-6 text-emerald-600 mb-2"></i>
+          <span class="text-xs font-bold text-slate-900">Setor Uang Jajan</span>
+          <span class="text-[10px] text-slate-500 mt-0.5">Tambah saldo santri</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-sheet', false); openModalUangJajan('Tarik');" class="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex flex-col items-center text-center hover:bg-rose-100 transition btn-press">
+          <i data-lucide="arrow-up-right" class="w-6 h-6 text-rose-600 mb-2"></i>
+          <span class="text-xs font-bold text-slate-900">Tarik Uang Jajan</span>
+          <span class="text-[10px] text-slate-500 mt-0.5">Penarikan jajan fisik</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-sheet', false); openFormPage('modal-kedisiplinan');" class="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex flex-col items-center text-center hover:bg-amber-100 transition btn-press">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-amber-600 mb-2"></i>
+          <span class="text-xs font-bold text-slate-900">Catat Kedisiplinan</span>
+          <span class="text-[10px] text-slate-500 mt-0.5">Poin adab/pelanggaran</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-sheet', false); openFormPage('modal-perizinan');" class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex flex-col items-center text-center hover:bg-blue-100 transition btn-press">
+          <i data-lucide="calendar-plus" class="w-6 h-6 text-blue-600 mb-2"></i>
+          <span class="text-xs font-bold text-slate-900">Pengajuan Izin</span>
+          <span class="text-[10px] text-slate-500 mt-0.5">Izin keluar/bertemu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MORE MENU MODAL -->
+  <div id="modal-quick-menu" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-end justify-center z-50">
+    <div class="bg-white rounded-t-3xl max-w-md w-full p-6 shadow-2xl slide-up space-y-4">
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-extrabold text-slate-900">Menu Utama Sistem</h3>
+        <button onclick="toggleModal('modal-quick-menu', false)" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 pt-2">
+        <button onclick="toggleModal('modal-quick-menu', false); switchTab('santri');" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="users" class="w-5 h-5 text-emerald-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-slate-800">Data Santri</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-menu', false); switchTab('kedisiplinan');" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="shield-alert" class="w-5 h-5 text-rose-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-slate-800">Kedisiplinan</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-menu', false); switchTab('keuangan');" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="wallet" class="w-5 h-5 text-teal-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-slate-800">Uang Jajan</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-menu', false); switchTab('perizinan');" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="calendar-days" class="w-5 h-5 text-blue-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-slate-800">Perizinan</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-menu', false); switchTab('laporan');" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-slate-800">Laporan PDF</span>
+        </button>
+
+        <button onclick="toggleModal('modal-quick-menu', false); openLogoutModal();" class="p-3 bg-rose-50 border border-rose-100 rounded-2xl flex flex-col items-center text-center">
+          <i data-lucide="log-out" class="w-5 h-5 text-rose-600 mb-1.5"></i>
+          <span class="text-[11px] font-bold text-rose-700">Keluar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL USER PROFILE (MOBILE) -->
   <div id="modal-user-profile" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl slide-up text-center space-y-4 relative">
       <button onclick="toggleModal('modal-user-profile', false)" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
-      <div class="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto border border-emerald-100 font-black text-xl shadow-sm">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto border border-emerald-100 font-black text-xl shadow-xs">
         <span id="m-profile-avatar">A</span>
       </div>
       <div>
         <h3 class="text-sm font-extrabold text-slate-900" id="m-profile-name">Admin Utama</h3>
         <p class="text-[10px] font-bold text-emerald-600 uppercase mt-0.5 tracking-wider" id="m-profile-role">ADMINISTRATOR</p>
-        <p class="text-[11px] text-slate-400 mt-1 italic">Sistem Informasi Santri RQHK</p>
+        <p class="text-[11px] text-slate-400 mt-1 italic">Rumah Al-Qur'an Husnul Khatimah</p>
       </div>
       <div class="border-t pt-3 flex flex-col space-y-2">
         <button onclick="toggleModal('modal-user-profile', false); openLogoutModal();" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
@@ -1023,237 +1164,329 @@
     </div>
   </div>
 
-  <!-- MODAL SANTRI -->
-  <div id="modal-santri" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up">
-      <h3 id="modal-santri-title" class="text-sm font-bold text-slate-900 mb-4">Tambah Santri Baru</h3>
-      <form onsubmit="handleSaveSantri(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="m-santri-edit-id">
-        <input type="text" id="m-santri-nis" placeholder="NIS Santri (mis: 1001)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
-        <input type="text" id="m-santri-nama" placeholder="Nama Lengkap Santri" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
-        <div class="grid grid-cols-2 gap-3">
-          <input type="text" id="m-santri-angkatan" placeholder="Angkatan (mis: 2026)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
-          <input type="text" id="m-santri-kelas" placeholder="Kelas / Takhassus" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+  <!-- MODAL SANTRI (PAGE PANEL MODE) -->
+  <div id="modal-santri" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-0 md:p-4 z-50">
+    <div class="bg-white rounded-none md:rounded-2xl max-w-md w-full h-full md:h-auto p-6 shadow-2xl slide-up overflow-y-auto flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="cancelModal('modal-santri')" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modal-santri-title" class="text-sm font-bold text-slate-900">Tambah Santri Baru</h3>
+          </div>
+          <button type="button" onclick="cancelModal('modal-santri')" class="hidden md:block text-slate-400 hover:text-slate-600">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
         </div>
-        <input type="text" id="m-santri-nohp" placeholder="No HP Orang Tua (WhatsApp)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
-        <textarea id="m-santri-alamat" placeholder="Alamat Singkat" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500" rows="2"></textarea>
-        <div class="flex justify-end space-x-2 pt-3">
-          <button type="button" onclick="cancelModal('modal-santri')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
-          <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan</button>
-        </div>
-      </form>
+
+        <form onsubmit="handleSaveSantri(event)" id="form-santri" class="space-y-3 text-xs">
+          <input type="hidden" id="m-santri-edit-id">
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">NIS Santri:</label>
+            <input type="text" id="m-santri-nis" placeholder="NIS Santri (mis: 1001)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nama Lengkap Santri:</label>
+            <input type="text" id="m-santri-nama" placeholder="Nama Lengkap Santri" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Angkatan:</label>
+              <input type="text" id="m-santri-angkatan" placeholder="Angkatan (mis: 2026)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kelas / Takhassus:</label>
+              <input type="text" id="m-santri-kelas" placeholder="Kelas / Takhassus" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">No HP Orang Tua (WhatsApp):</label>
+            <input type="text" id="m-santri-nohp" placeholder="No HP Orang Tua (WhatsApp)" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Alamat Rumah:</label>
+            <textarea id="m-santri-alamat" placeholder="Alamat Singkat" required class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500" rows="3"></textarea>
+          </div>
+          <div class="flex justify-end space-x-2 pt-4 border-t mt-4">
+            <button type="button" onclick="cancelModal('modal-santri')" class="px-4 py-2.5 border rounded-xl font-semibold text-slate-600">Batal</button>
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold shadow btn-press">Simpan Santri</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
-  <!-- MODAL KEDISIPLINAN (DUAL MODE: PER ORANGAN / KOLEKTIF) -->
-  <div id="modal-kedisiplinan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between mb-3">
-        <h3 id="modal-disc-title" class="text-sm font-bold text-slate-900">Catat Kedisiplinan</h3>
-        <!-- TABS MODE INPUT -->
-        <div class="flex bg-slate-100 p-1 rounded-xl text-[10px] font-bold">
-          <button type="button" id="btn-disc-single" onclick="setDisciplineInputMode('single')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-2xs">Per Orangan</button>
-          <button type="button" id="btn-disc-collective" onclick="setDisciplineInputMode('collective')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Kolektif</button>
+  <!-- MODAL KEDISIPLINAN -->
+  <div id="modal-kedisiplinan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-0 md:p-4 z-50">
+    <div class="bg-white rounded-none md:rounded-2xl max-w-md w-full h-full md:h-auto p-6 shadow-2xl slide-up overflow-y-auto flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="cancelModal('modal-kedisiplinan')" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modal-disc-title" class="text-sm font-bold text-slate-900">Catat Kedisiplinan</h3>
+          </div>
+          <!-- TABS MODE INPUT -->
+          <div class="flex bg-slate-100 p-1 rounded-xl text-[10px] font-bold">
+            <button type="button" id="btn-disc-single" onclick="setDisciplineInputMode('single')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-2xs">Per Orangan</button>
+            <button type="button" id="btn-disc-collective" onclick="setDisciplineInputMode('collective')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Kolektif</button>
+          </div>
         </div>
+
+        <form onsubmit="handleAddKedisiplinan(event)" class="space-y-3 text-xs">
+          <input type="hidden" id="m-disc-edit-id">
+
+          <!-- INPUT PER ORANGAN -->
+          <div id="box-disc-single" class="w-full">
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
+            <div class="w-full min-w-0">
+              <select id="m-disc-nis" class="w-full select-santri-options search-select"></select>
+            </div>
+          </div>
+
+          <!-- INPUT KOLEKTIF -->
+          <div id="box-disc-collective" class="hidden space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <label class="block text-[10px] text-slate-600 font-bold uppercase">Pilih Santri Kolektif (Dapat Pilih > 1):</label>
+            <div class="w-full min-w-0">
+              <select id="m-disc-nis-kolektif-picker" class="w-full select-santri-options search-select" onchange="addCollectiveTag('disc', this.value)"></select>
+            </div>
+            <div id="m-disc-kolektif-tags" class="min-h-10 p-2 bg-white border rounded-xl flex flex-wrap items-center">
+              <span class="text-[10px] text-slate-400 italic">Pilih nama santri di atas untuk menambahkan ke daftar kolektif...</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tanggal & Waktu:</label>
+            <input type="text" id="m-disc-tanggal" required placeholder="Pilih Tanggal & Waktu" class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tipe:</label>
+              <div class="w-full min-w-0">
+                <select id="m-disc-tipe" required class="w-full search-select">
+                  <option value="Pelanggaran">Pelanggaran</option>
+                  <option value="Penghargaan">Penghargaan</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kategori:</label>
+              <input type="text" id="m-disc-kategori" placeholder="Contoh: Ibadah / Adab" required class="w-full px-3.5 py-2.5 border rounded-xl">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal Poin:</label>
+            <input type="number" id="m-disc-poin" placeholder="Poin (mis: 10)" required class="w-full px-3.5 py-2.5 border rounded-xl">
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Keterangan Detail:</label>
+            <textarea id="m-disc-ket" placeholder="Keterangan Detail" required class="w-full px-3.5 py-2.5 border rounded-xl" rows="2"></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-2 pt-3 border-t mt-3">
+            <button type="button" onclick="cancelModal('modal-kedisiplinan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Catatan</button>
+          </div>
+        </form>
       </div>
-
-      <form onsubmit="handleAddKedisiplinan(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="m-disc-edit-id">
-
-        <!-- INPUT PER ORANGAN -->
-        <div id="box-disc-single">
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
-          <select id="m-disc-nis" class="w-full select-santri-options search-select"></select>
-        </div>
-
-        <!-- INPUT KOLEKTIF (PILIH BANYAK SANTRI DENGAN TAGS) -->
-        <div id="box-disc-collective" class="hidden space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-          <label class="block text-[10px] text-slate-600 font-bold uppercase">Pilih Santri Kolektif (Dapat Pilih > 1):</label>
-          <select id="m-disc-nis-kolektif-picker" class="w-full select-santri-options search-select" onchange="addCollectiveTag('disc', this.value)"></select>
-          <div id="m-disc-kolektif-tags" class="min-h-10 p-2 bg-white border rounded-xl flex flex-wrap items-center">
-            <span class="text-[10px] text-slate-400 italic">Pilih nama santri di atas untuk menambahkan ke daftar kolektif...</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tanggal & Waktu:</label>
-          <input type="text" id="m-disc-tanggal" required placeholder="Pilih Tanggal & Waktu" class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tipe:</label>
-            <select id="m-disc-tipe" required class="w-full search-select">
-              <option value="Pelanggaran">Pelanggaran</option>
-              <option value="Penghargaan">Penghargaan</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kategori:</label>
-            <input type="text" id="m-disc-kategori" placeholder="Contoh: Ibadah / Adab" required class="w-full px-3.5 py-2.5 border rounded-xl">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal Poin:</label>
-          <input type="number" id="m-disc-poin" placeholder="Poin (mis: 10)" required class="w-full px-3.5 py-2.5 border rounded-xl">
-        </div>
-
-        <textarea id="m-disc-ket" placeholder="Keterangan Detail" required class="w-full px-3.5 py-2.5 border rounded-xl" rows="2"></textarea>
-
-        <div class="flex justify-end space-x-2 pt-3">
-          <button type="button" onclick="cancelModal('modal-kedisiplinan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
-          <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Catatan</button>
-        </div>
-      </form>
     </div>
   </div>
 
-  <!-- MODAL UANG JAJAN (DUAL MODE: PER ORANGAN / KOLEKTIF) -->
-  <div id="modal-uang-jajan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between mb-3">
-        <h3 id="modal-uj-title" class="text-sm font-bold text-slate-900">Input Transaksi Uang Jajan</h3>
-        <div class="flex bg-slate-100 p-1 rounded-xl text-[10px] font-bold">
-          <button type="button" id="btn-uj-single" onclick="setUangJajanInputMode('single')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-2xs">Per Orangan</button>
-          <button type="button" id="btn-uj-collective" onclick="setUangJajanInputMode('collective')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Kolektif</button>
+  <!-- MODAL UANG JAJAN -->
+  <div id="modal-uang-jajan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-0 md:p-4 z-50">
+    <div class="bg-white rounded-none md:rounded-2xl max-w-md w-full h-full md:h-auto p-6 shadow-2xl slide-up overflow-y-auto flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="cancelModal('modal-uang-jajan')" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modal-uj-title" class="text-sm font-bold text-slate-900">Input Transaksi Uang Jajan</h3>
+          </div>
+          <div class="flex bg-slate-100 p-1 rounded-xl text-[10px] font-bold">
+            <button type="button" id="btn-uj-single" onclick="setUangJajanInputMode('single')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-2xs">Per Orangan</button>
+            <button type="button" id="btn-uj-collective" onclick="setUangJajanInputMode('collective')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Kolektif</button>
+          </div>
         </div>
+
+        <form onsubmit="handleAddUangJajan(event)" class="space-y-3 text-xs">
+          <input type="hidden" id="m-uj-edit-id">
+
+          <!-- INPUT PER ORANGAN -->
+          <div id="box-uj-single" class="w-full">
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
+            <div class="w-full min-w-0">
+              <select id="m-uj-nis" class="w-full select-santri-options search-select"></select>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2.5 bg-slate-50 p-3 mt-2 rounded-xl border border-slate-200">
+              <div>
+                <span class="block text-[10px] text-slate-400 font-medium">NIS Santri</span>
+                <input type="text" id="m-uj-display-nis" readonly placeholder="-" class="w-full bg-transparent font-mono font-bold text-slate-700 focus:outline-none">
+              </div>
+              <div>
+                <span class="block text-[10px] text-slate-400 font-medium">Kelas / Angkatan</span>
+                <input type="text" id="m-uj-display-kelas" readonly placeholder="-" class="w-full bg-transparent font-semibold text-slate-700 focus:outline-none truncate">
+              </div>
+              <div>
+                <span class="block text-[10px] text-slate-400 font-medium">Saldo Terkini</span>
+                <input type="text" id="m-uj-display-saldo" readonly placeholder="Rp 0" class="w-full bg-transparent font-mono font-bold text-emerald-600 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- INPUT KOLEKTIF -->
+          <div id="box-uj-collective" class="hidden space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <label class="block text-[10px] text-slate-600 font-bold uppercase">Pilih Santri Kolektif (Dapat Pilih > 1):</label>
+            <div class="w-full min-w-0">
+              <select id="m-uj-nis-kolektif-picker" class="w-full select-santri-options search-select" onchange="addCollectiveTag('uj', this.value)"></select>
+            </div>
+            <div id="m-uj-kolektif-tags" class="min-h-10 p-2 bg-white border rounded-xl flex flex-wrap items-center">
+              <span class="text-[10px] text-slate-400 italic">Pilih nama santri di atas untuk menambahkan ke daftar kolektif...</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tanggal Transaksi:</label>
+            <input type="text" id="m-uj-tanggal" required placeholder="Pilih Waktu" class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Jenis Transaksi:</label>
+              <div class="w-full min-w-0">
+                <select id="m-uj-jenis" required class="w-full search-select">
+                  <option value="Setor">Setor Uang</option>
+                  <option value="Tarik">Tarik / Jajan</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 font-semibold mb-1">Metode/Sumber:</label>
+              <div class="w-full min-w-0">
+                <select id="m-uj-metode" required class="w-full search-select">
+                  <option value="Cash">Cash / Tunai</option>
+                  <option value="Musyrif">Rekening Musyrif</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal per Santri (Rp):</label>
+            <input type="text" inputmode="numeric" id="m-uj-jumlah" oninput="formatCurrencyInput(this)" placeholder="Jumlah Nominal (Rp)" required class="w-full px-3.5 py-2.5 border rounded-xl font-mono font-bold text-slate-800">
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Keterangan:</label>
+            <div class="w-full min-w-0">
+              <select id="m-uj-ket-select" class="w-full search-select">
+                <option value="Titipan Tunai">Titipan Tunai</option>
+                <option value="Transfer Orang Tua">Transfer Orang Tua</option>
+                <option value="Tarik Tunai Jajan">Tarik Tunai Jajan</option>
+                <option value="Lainnya">Lainnya...</option>
+              </select>
+            </div>
+            <input type="text" id="m-uj-ket-manual" placeholder="Tuliskan keterangan lain..." class="hidden w-full mt-2 px-3.5 py-2.5 border rounded-xl">
+          </div>
+          
+          <div class="flex justify-end space-x-2 pt-3 border-t mt-3">
+            <button type="button" onclick="cancelModal('modal-uang-jajan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Proses Transaksi</button>
+          </div>
+        </form>
       </div>
-
-      <form onsubmit="handleAddUangJajan(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="m-uj-edit-id">
-
-        <!-- INPUT PER ORANGAN -->
-        <div id="box-uj-single">
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
-          <select id="m-uj-nis" class="w-full select-santri-options search-select"></select>
-
-          <div class="grid grid-cols-3 gap-2.5 bg-slate-50 p-3 mt-2 rounded-xl border border-slate-200">
-            <div>
-              <span class="block text-[10px] text-slate-400 font-medium">NIS Santri</span>
-              <input type="text" id="m-uj-display-nis" readonly placeholder="-" class="w-full bg-transparent font-mono font-bold text-slate-700 focus:outline-none">
-            </div>
-            <div>
-              <span class="block text-[10px] text-slate-400 font-medium">Kelas / Angkatan</span>
-              <input type="text" id="m-uj-display-kelas" readonly placeholder="-" class="w-full bg-transparent font-semibold text-slate-700 focus:outline-none truncate">
-            </div>
-            <div>
-              <span class="block text-[10px] text-slate-400 font-medium">Saldo Terkini</span>
-              <input type="text" id="m-uj-display-saldo" readonly placeholder="Rp 0" class="w-full bg-transparent font-mono font-bold text-emerald-600 focus:outline-none">
-            </div>
-          </div>
-        </div>
-
-        <!-- INPUT KOLEKTIF -->
-        <div id="box-uj-collective" class="hidden space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-          <label class="block text-[10px] text-slate-600 font-bold uppercase">Pilih Santri Kolektif (Dapat Pilih > 1):</label>
-          <select id="m-uj-nis-kolektif-picker" class="w-full select-santri-options search-select" onchange="addCollectiveTag('uj', this.value)"></select>
-          <div id="m-uj-kolektif-tags" class="min-h-10 p-2 bg-white border rounded-xl flex flex-wrap items-center">
-            <span class="text-[10px] text-slate-400 italic">Pilih nama santri di atas untuk menambahkan ke daftar kolektif...</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Tanggal Transaksi:</label>
-          <input type="text" id="m-uj-tanggal" required placeholder="Pilih Waktu" class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Jenis Transaksi:</label>
-            <select id="m-uj-jenis" required class="w-full search-select">
-              <option value="Setor">Setor Uang</option>
-              <option value="Tarik">Tarik / Jajan</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Metode/Sumber:</label>
-            <select id="m-uj-metode" required class="w-full search-select">
-              <option value="Cash">Cash / Tunai</option>
-              <option value="Musyrif">Rekening Musyrif</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal per Santri (Rp):</label>
-          <input type="text" inputmode="numeric" id="m-uj-jumlah" oninput="formatCurrencyInput(this)" placeholder="Jumlah Nominal (Rp)" required class="w-full px-3.5 py-2.5 border rounded-xl font-mono font-bold text-slate-800">
-        </div>
-
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Keterangan:</label>
-          <select id="m-uj-ket-select" class="w-full search-select">
-            <option value="Titipan Tunai">Titipan Tunai</option>
-            <option value="Transfer Orang Tua">Transfer Orang Tua</option>
-            <option value="Tarik Tunai Jajan">Tarik Tunai Jajan</option>
-            <option value="Lainnya">Lainnya...</option>
-          </select>
-          <input type="text" id="m-uj-ket-manual" placeholder="Tuliskan keterangan lain..." class="hidden w-full mt-2 px-3.5 py-2.5 border rounded-xl">
-        </div>
-        
-        <div class="flex justify-end space-x-2 pt-3">
-          <button type="button" onclick="cancelModal('modal-uang-jajan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
-          <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Proses Transaksi</button>
-        </div>
-      </form>
     </div>
   </div>
 
   <!-- MODAL MUTASI DANA -->
-  <div id="modal-mutasi" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up">
-      <h3 class="text-sm font-bold text-slate-900 mb-1">Mutasi Rekening Musyrif ke Kas Tunai</h3>
-      <p class="text-[11px] text-slate-500 mb-4">Pencatatan penarikan dana transfer dari rekening musyrif menjadi uang fisik cash kas santri.</p>
-      <form onsubmit="handleMutasi(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal Mutasi (Rp):</label>
-          <input type="text" inputmode="numeric" id="m-mutasi-jumlah" oninput="formatCurrencyInput(this)" placeholder="Nominal Mutasi (Rp)" required class="w-full px-3.5 py-2.5 border rounded-xl font-mono font-bold text-slate-800">
+  <div id="modal-mutasi" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-0 md:p-4 z-50">
+    <div class="bg-white rounded-none md:rounded-2xl max-w-md w-full h-full md:h-auto p-6 shadow-2xl slide-up overflow-y-auto flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="cancelModal('modal-mutasi')" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <h3 class="text-sm font-bold text-slate-900">Mutasi Rekening Musyrif ke Kas Tunai</h3>
+          </div>
         </div>
-        <input type="text" id="m-mutasi-ket" placeholder="Keterangan (mis: Tarik Tunai ATM BCA Musyrif)" class="w-full px-3.5 py-2.5 border rounded-xl">
-        <div class="flex justify-end space-x-2 pt-3">
-          <button type="button" onclick="cancelModal('modal-mutasi')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
-          <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Mutasi</button>
-        </div>
-      </form>
+        <p class="text-[11px] text-slate-500 mb-4">Pencatatan penarikan dana transfer dari rekening musyrif menjadi uang fisik cash kas santri.</p>
+        <form onsubmit="handleMutasi(event)" class="space-y-3 text-xs">
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Nominal Mutasi (Rp):</label>
+            <input type="text" inputmode="numeric" id="m-mutasi-jumlah" oninput="formatCurrencyInput(this)" placeholder="Nominal Mutasi (Rp)" required class="w-full px-3.5 py-2.5 border rounded-xl font-mono font-bold text-slate-800">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Keterangan Penarikan:</label>
+            <input type="text" id="m-mutasi-ket" placeholder="Keterangan (mis: Tarik Tunai ATM BCA Musyrif)" class="w-full px-3.5 py-2.5 border rounded-xl">
+          </div>
+          <div class="flex justify-end space-x-2 pt-3 border-t mt-4">
+            <button type="button" onclick="cancelModal('modal-mutasi')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
+            <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Mutasi</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- MODAL PERIZINAN -->
-  <div id="modal-perizinan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl slide-up">
-      <h3 id="modal-izn-title" class="text-sm font-bold text-slate-900 mb-4">Pengajuan Izin Santri</h3>
-      <form onsubmit="handleAddPerizinan(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="m-izn-edit-id">
-        <div id="box-izn-nis-select">
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
-          <select id="m-izn-nis" required class="w-full select-santri-options search-select"></select>
-        </div>
-        <div>
-          <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kategori Izin:</label>
-          <select id="m-izn-kategori" required class="w-full search-select">
-            <option value="Izin Datang Bertemu Santri">Izin Datang Bertemu Santri</option>
-            <option value="Izin Keluar Membawa Santri">Izin Keluar Membawa Santri</option>
-            <option value="Izin Keluar Pondok" class="opt-admin-only">Izin Keluar Pondok</option>
-            <option value="Izin Menelpon" class="opt-admin-only">Izin Menelpon</option>
-            <option value="Izin Pulang/Cuti" class="opt-admin-only">Izin Pulang / Cuti</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-[10px] text-slate-500 font-semibold block mb-1">Mulai/Keluar</label>
-            <input type="text" id="m-izn-mulai" placeholder="Pilih Waktu" required class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 font-semibold block mb-1">Selesai/Kembali</label>
-            <input type="text" id="m-izn-selesai" placeholder="Pilih Waktu" required class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
+  <div id="modal-perizinan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-0 md:p-4 z-50">
+    <div class="bg-white rounded-none md:rounded-2xl max-w-md w-full h-full md:h-auto p-6 shadow-2xl slide-up overflow-y-auto flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="cancelModal('modal-perizinan')" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modal-izn-title" class="text-sm font-bold text-slate-900">Pengajuan Izin Santri</h3>
           </div>
         </div>
-        <textarea id="m-izn-alasan" placeholder="Alasan Perizinan" required class="w-full px-3.5 py-2.5 border rounded-xl" rows="2"></textarea>
-        <div class="flex justify-end space-x-2 pt-3">
-          <button type="button" onclick="cancelModal('modal-perizinan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
-          <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Izin</button>
-        </div>
-      </form>
+        <form onsubmit="handleAddPerizinan(event)" class="space-y-3 text-xs">
+          <input type="hidden" id="m-izn-edit-id">
+          <div id="box-izn-nis-select" class="w-full">
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Pilih Santri:</label>
+            <div class="w-full min-w-0">
+              <select id="m-izn-nis" required class="w-full select-santri-options search-select"></select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Kategori Izin:</label>
+            <div class="w-full min-w-0">
+              <select id="m-izn-kategori" required class="w-full search-select">
+                <option value="Izin Datang Bertemu Santri">Izin Datang Bertemu Santri</option>
+                <option value="Izin Keluar Membawa Santri">Izin Keluar Membawa Santri</option>
+                <option value="Izin Keluar Pondok" class="opt-admin-only">Izin Keluar Pondok</option>
+                <option value="Izin Menelpon" class="opt-admin-only">Izin Menelpon</option>
+                <option value="Izin Pulang/Cuti" class="opt-admin-only">Izin Pulang / Cuti</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[10px] text-slate-500 font-semibold block mb-1">Mulai/Keluar</label>
+              <input type="text" id="m-izn-mulai" placeholder="Pilih Waktu" required class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 font-semibold block mb-1">Selesai/Kembali</label>
+              <input type="text" id="m-izn-selesai" placeholder="Pilih Waktu" required class="w-full px-3.5 py-2.5 border rounded-xl bg-white">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-500 font-semibold mb-1">Alasan Perizinan:</label>
+            <textarea id="m-izn-alasan" placeholder="Alasan Perizinan Detail" required class="w-full px-3.5 py-2.5 border rounded-xl" rows="2"></textarea>
+          </div>
+          <div class="flex justify-end space-x-2 pt-3 border-t mt-4">
+            <button type="button" onclick="cancelModal('modal-perizinan')" class="px-4 py-2 border rounded-xl font-semibold text-slate-600">Batal</button>
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow btn-press">Simpan Izin</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -1310,7 +1543,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxFAYuWE8OSLR-QTuLA3_xLNis5PRMAF5E0qx3nEG8rXu5kHqAwOeXC-eLj50SqC6hgGQ/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbynkJpXk8VGddUl_cqy-M6W1kiBQeUS15sthoMLs4GWJx0mHQAusXbJ3AmGJDqYupBN_g/exec";
     const SESSION_KEY = 'rqhk_kesantrian_session_v2';
     const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
 
@@ -1332,12 +1565,11 @@
 
     let tomSelectInstances = {};
 
-    // Collective Input Tags State
     let collectiveDiscNisList = [];
-    let collectiveDiscMode = 'single'; // 'single' or 'collective'
+    let collectiveDiscMode = 'single';
 
     let collectiveUjNisList = [];
-    let collectiveUjMode = 'single'; // 'single' or 'collective'
+    let collectiveUjMode = 'single';
 
     let appData = {
       santriList: [],
@@ -1400,7 +1632,6 @@
       }
     }
 
-    // INSTANT RESPONSIVE LOADING OVERLAY (NO DELAY)
     function showLoading(title = "Memproses Data...", subtitle = "Mohon tunggu sebentar") {
       const el = document.getElementById('global-loading-overlay');
       if (el) {
@@ -1558,16 +1789,6 @@
                   'No HP Orang Tua': params.noHp,
                   Status: 'Aktif'
                 };
-              } else {
-                mockStorage.santriList.push({
-                  NIS: safeString(params.nis),
-                  'Nama Lengkap': params.nama,
-                  Angkatan: params.angkatan,
-                  Kelas: params.kelas,
-                  Alamat: params.alamat,
-                  'No HP Orang Tua': params.noHp,
-                  Status: 'Aktif'
-                });
               }
             } else {
               mockStorage.santriList.push({
@@ -1585,95 +1806,48 @@
             mockStorage.santriList = mockStorage.santriList.filter(s => safeString(s.NIS) !== safeString(reqId));
             resolve({ status: 'success', message: 'Data Santri berhasil dihapus!' });
           } else if (methodName === 'addPelanggaranPenghargaan') {
-            const editId = safeString(params.editIndex);
-            if (editId !== "") {
-              let idx = mockStorage.pelanggaranList.findIndex(p => safeString(p.ID) === editId);
-              if (idx !== -1) {
-                mockStorage.pelanggaranList[idx] = {
-                  ...mockStorage.pelanggaranList[idx],
-                  Tanggal: params.tanggal,
-                  NIS: safeString(params.nis),
-                  Tipe: params.tipe,
-                  Kategori: params.kategori,
-                  Keterangan: params.keterangan,
-                  Poin: Number(params.poin)
-                };
-              }
-            } else {
-              mockStorage.pelanggaranList.unshift({
-                ID: 'DISC-' + Date.now() + Math.floor(Math.random() * 100),
-                Tanggal: params.tanggal || new Date().toISOString().slice(0, 10),
-                NIS: safeString(params.nis),
-                Tipe: params.tipe,
-                Kategori: params.kategori,
-                Keterangan: params.keterangan,
-                Poin: Number(params.poin),
-                "Diinput Oleh": params.diinputOleh || (currentUser ? currentUser.nama : "Admin")
-              });
-            }
+            mockStorage.pelanggaranList.unshift({
+              ID: 'DISC-' + Date.now() + Math.floor(Math.random() * 100),
+              Tanggal: params.tanggal || new Date().toISOString().slice(0, 10),
+              NIS: safeString(params.nis),
+              Tipe: params.tipe,
+              Kategori: params.kategori,
+              Keterangan: params.keterangan,
+              Poin: Number(params.poin),
+              "Diinput Oleh": params.diinputOleh || (currentUser ? currentUser.nama : "Admin")
+            });
             resolve({ status: 'success', message: 'Catatan kedisiplinan berhasil disimpan!' });
           } else if (methodName === 'deleteKedisiplinan') {
             mockStorage.pelanggaranList = mockStorage.pelanggaranList.filter(p => safeString(p.ID) !== safeString(reqId));
             resolve({ status: 'success', message: 'Catatan kedisiplinan berhasil dihapus!' });
           } else if (methodName === 'addUangJajan') {
-            const editId = safeString(params.editIndex);
             let ket = params.keterangan === 'Lainnya' ? params.keteranganManual : params.keterangan;
-            if (editId !== "") {
-              let idx = mockStorage.uangJajanList.findIndex(u => safeString(u['ID Transaksi']) === editId);
-              if (idx !== -1) {
-                mockStorage.uangJajanList[idx] = {
-                  ...mockStorage.uangJajanList[idx],
-                  Tanggal: params.tanggal,
-                  NIS: safeString(params.nis || '-'),
-                  'Jenis Transaksi': params.jenis,
-                  Jumlah: Number(params.jumlah),
-                  'Sumber/Metode': params.metode,
-                  Keterangan: ket
-                };
-              }
-            } else {
-              mockStorage.uangJajanList.unshift({
-                'ID Transaksi': 'TRX-' + Date.now() + Math.floor(Math.random() * 100),
-                Tanggal: params.tanggal || new Date().toLocaleString('id-ID'),
-                NIS: safeString(params.nis || '-'),
-                'Jenis Transaksi': params.jenis,
-                Jumlah: Number(params.jumlah),
-                'Sumber/Metode': params.metode,
-                Keterangan: ket,
-                "Diinput Oleh": params.diinputOleh || (currentUser ? currentUser.nama : "Admin")
-              });
-            }
+            mockStorage.uangJajanList.unshift({
+              'ID Transaksi': 'TRX-' + Date.now() + Math.floor(Math.random() * 100),
+              Tanggal: params.tanggal || new Date().toLocaleString('id-ID'),
+              NIS: safeString(params.nis || '-'),
+              'Jenis Transaksi': params.jenis,
+              Jumlah: Number(params.jumlah),
+              'Sumber/Metode': params.metode,
+              Keterangan: ket,
+              "Diinput Oleh": params.diinputOleh || (currentUser ? currentUser.nama : "Admin")
+            });
             resolve({ status: 'success', message: 'Transaksi berhasil diproses!' });
           } else if (methodName === 'deleteKeuangan') {
             mockStorage.uangJajanList = mockStorage.uangJajanList.filter(u => safeString(u['ID Transaksi'] || u.ID) !== safeString(reqId));
             resolve({ status: 'success', message: 'Transaksi berhasil dihapus!' });
           } else if (methodName === 'addPerizinan') {
-            const editId = safeString(params.editIndex);
-            if (editId !== "") {
-              let idx = mockStorage.perizinanList.findIndex(p => safeString(p['ID Izin']) === editId);
-              if (idx !== -1) {
-                mockStorage.perizinanList[idx] = {
-                  ...mockStorage.perizinanList[idx],
-                  NIS: safeString(params.nis),
-                  'Kategori Izin': params.kategori,
-                  Mulai: params.mulai,
-                  Selesai: params.selesai,
-                  Alasan: params.alasan
-                };
-              }
-            } else {
-              mockStorage.perizinanList.unshift({
-                'ID Izin': 'IZN-' + Date.now(),
-                Tanggal: new Date().toISOString().slice(0, 10),
-                NIS: safeString(params.nis),
-                'Kategori Izin': params.kategori,
-                Mulai: params.mulai,
-                Selesai: params.selesai,
-                Alasan: params.alasan,
-                Status: 'Pending',
-                "Diinput Oleh": currentUser ? currentUser.nama : "Wali Santri"
-              });
-            }
+            mockStorage.perizinanList.unshift({
+              'ID Izin': 'IZN-' + Date.now(),
+              Tanggal: new Date().toISOString().slice(0, 10),
+              NIS: safeString(params.nis),
+              'Kategori Izin': params.kategori,
+              Mulai: params.mulai,
+              Selesai: params.selesai,
+              Alasan: params.alasan,
+              Status: 'Pending',
+              "Diinput Oleh": currentUser ? currentUser.nama : "Wali Santri"
+            });
             resolve({ status: 'success', message: 'Pengajuan izin berhasil disimpan!' });
           } else if (methodName === 'deletePerizinan') {
             mockStorage.perizinanList = mockStorage.perizinanList.filter(p => safeString(p['ID Izin'] || p.ID) !== safeString(reqId));
@@ -1726,7 +1900,6 @@
       });
     }
 
-    // COLLECTIVE TAG MANAGEMENT LOGIC
     function setDisciplineInputMode(mode) {
       collectiveDiscMode = mode;
       const singleBtn = document.getElementById('btn-disc-single');
@@ -1886,6 +2059,27 @@
       }
     }
 
+    function openFormPage(modalId) {
+      resetModalForm(modalId);
+      toggleModal(modalId, true);
+    }
+
+    function openQuickActionSheet() {
+      toggleModal('modal-quick-sheet', true);
+    }
+
+    function toggleDesktopSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar) return;
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('md:flex');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('md:flex');
+      }
+    }
+
     function cancelModal(modalId) {
       pendingCancelModalId = modalId;
       toggleModal('modal-confirm-cancel', true);
@@ -1898,28 +2092,6 @@
         pendingCancelModalId = null;
       }
       toggleModal('modal-confirm-cancel', false);
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      if (!sidebar) return;
-      
-      const isHidden = sidebar.classList.contains('-translate-x-full');
-      if (isHidden) {
-        sidebar.classList.remove('-translate-x-full');
-        if (overlay) overlay.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('-translate-x-full');
-        if (overlay) overlay.classList.add('hidden');
-      }
-    }
-
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      if (sidebar) sidebar.classList.add('-translate-x-full');
-      if (overlay) overlay.classList.add('hidden');
     }
 
     function contactAdminWA() {
@@ -2055,6 +2227,9 @@
       document.getElementById('m-profile-name').innerText = currentUser.nama;
       document.getElementById('m-profile-role').innerText = currentUser.role;
 
+      const mDashUser = document.getElementById('m-dash-user-name');
+      if (mDashUser) mDashUser.innerText = currentUser.nama;
+
       let modeText = "Full Administrator";
       if (currentUser.role === 'Pimpinan') modeText = "Pimpinan (Read Only)";
       if (currentUser.role === 'Orang Tua') modeText = "Akses Wali Santri";
@@ -2064,13 +2239,11 @@
       const isReadOnly = currentUser.role === 'Pimpinan';
       const isWali = currentUser.role === 'Orang Tua';
 
-      // Customize Sidebar Navigation Labels
       const navSantriLabel = document.getElementById('nav-label-santri');
       if (navSantriLabel) {
         navSantriLabel.innerText = isWali ? "Biodata Santri" : "Data Santri";
       }
 
-      // Hide or Show Action Buttons based on roles
       ['btn-add-santri', 'btn-add-disc', 'btn-add-uj', 'btn-add-mutasi'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
@@ -2079,7 +2252,6 @@
         }
       });
 
-      // Handle Perizinan Button for Wali Santri
       const btnAddIzin = document.getElementById('btn-add-izin');
       const btnLabelIzin = document.getElementById('btn-label-izin');
       if (btnAddIzin) {
@@ -2094,7 +2266,6 @@
         }
       }
 
-      // Role specific layout toggles
       if (isWali) {
         document.getElementById('dash-admin-stats-1')?.classList.add('hidden');
         document.getElementById('dash-admin-stats-2')?.classList.add('hidden');
@@ -2171,7 +2342,6 @@
       const target = document.getElementById(`tab-${tabId}`);
       if (target) target.classList.remove('hidden');
 
-      // Desktop Nav Styling
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 btn-press";
       });
@@ -2181,8 +2351,7 @@
         activeBtn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs transition bg-emerald-600 text-white shadow-md shadow-emerald-600/20 btn-press";
       }
 
-      // Mobile Bottom Nav Styling
-      const mTabs = ['dashboard', 'santri', 'kedisiplinan', 'keuangan', 'perizinan', 'laporan'];
+      const mTabs = ['dashboard', 'kedisiplinan', 'keuangan'];
       mTabs.forEach(t => {
         const mBtn = document.getElementById(`m-nav-${t}`);
         if (mBtn) {
@@ -2215,7 +2384,6 @@
         onSelectReportSantri(currentUser.linkedNis);
       }
 
-      closeSidebar();
       lucide.createIcons();
     }
 
@@ -2301,7 +2469,6 @@
       const childNis = isWali ? safeString(currentUser.linkedNis) : '';
 
       if (isWali && childNis) {
-        // Wali Santri Specific Dashboard Stats (STRICTLY SCOPED TO CHILD NIS)
         const childSaldo = appData.saldoPerSantri[childNis] || 0;
         const childPel = appData.pelanggaranList.filter(p => safeString(p.NIS) === childNis && p.Tipe === 'Pelanggaran').reduce((a, b) => a + Number(b.Poin||0), 0);
         const childPeng = appData.pelanggaranList.filter(p => safeString(p.NIS) === childNis && p.Tipe === 'Penghargaan').reduce((a, b) => a + Number(b.Poin||0), 0);
@@ -2313,7 +2480,6 @@
         document.getElementById('wali-stat-izin').innerText = activeLeave ? "Izin Keluar" : "Di Pondok";
 
       } else {
-        // Admin / Pimpinan Stats
         document.getElementById('stat-santri').innerText = stats.totalSantri || appData.santriList.length;
         document.getElementById('stat-cash').innerText = "Rp " + (stats.saldoCash || 0).toLocaleString('id-ID');
         document.getElementById('stat-musyrif').innerText = "Rp " + (stats.saldoMusyrif || 0).toLocaleString('id-ID');
@@ -2344,7 +2510,6 @@
         document.getElementById('stat-min-balance-val').innerText = "Rp " + minVal.toLocaleString('id-ID');
       }
 
-      // Sub Dashboard Metrics (Admin/Pimpinan)
       document.getElementById('sub-santri-total').innerText = appData.santriList.length;
       const kelasSet = new Set(appData.santriList.map(s => s.Kelas).filter(Boolean));
       document.getElementById('sub-santri-kelas').innerText = kelasSet.size;
@@ -2422,7 +2587,6 @@
     function renderCharts() {
       const isWali = currentUser && currentUser.role === 'Orang Tua';
 
-      // 1. Chart Izin Dashboard
       const ctxIzin = document.getElementById('chart-izin');
       if (ctxIzin && !isWali) {
         if (chartIzinInstance) chartIzinInstance.destroy();
@@ -2448,7 +2612,6 @@
         });
       }
 
-      // 2. Chart Kedisiplinan Dashboard
       const ctxDisc = document.getElementById('chart-kedisiplinan');
       if (ctxDisc && !isWali) {
         if (chartKedisiplinanInstance) chartKedisiplinanInstance.destroy();
@@ -2474,7 +2637,6 @@
         });
       }
 
-      // 3. Chart Keuangan Trend Dashboard
       const ctxKeu = document.getElementById('chart-keuangan-trend');
       if (ctxKeu && !isWali) {
         if (chartKeuanganTrendInstance) chartKeuanganTrendInstance.destroy();
@@ -2498,7 +2660,6 @@
         });
       }
 
-      // Sub-Dashboard 1: Sebaran Asal Daerah Santri
       const ctxDaerah = document.getElementById('chart-santri-daerah');
       if (ctxDaerah && !isWali) {
         if (chartSantriDaerahInstance) chartSantriDaerahInstance.destroy();
@@ -2521,7 +2682,6 @@
         });
       }
 
-      // Sub-Dashboard 2: Rasio & Tren Kedisiplinan
       const ctxDiscRatio = document.getElementById('chart-disc-ratio');
       if (ctxDiscRatio && !isWali) {
         if (chartDiscRatioInstance) chartDiscRatioInstance.destroy();
@@ -2559,7 +2719,6 @@
         });
       }
 
-      // Sub-Dashboard 3: Daily Financial Trend
       const ctxKeuDaily = document.getElementById('chart-keuangan-daily');
       if (ctxKeuDaily) {
         if (chartKeuanganDailyInstance) chartKeuanganDailyInstance.destroy();
@@ -2600,7 +2759,6 @@
         });
       }
 
-      // Sub-Dashboard 4: Perizinan Trend
       const ctxIzinTrend = document.getElementById('chart-izin-trend');
       if (ctxIzinTrend && !isWali) {
         if (chartIzinTrendInstance) chartIzinTrendInstance.destroy();
@@ -2701,7 +2859,6 @@
       if (isWali && childNis) {
         list = list.filter(p => safeString(p.NIS) === childNis);
 
-        // UPDATE SUB-DASHBOARD STATS STRICTLY FOR THIS CHILD
         const childPel = list.filter(p => p.Tipe === 'Pelanggaran').reduce((a, b) => a + Number(b.Poin||0), 0);
         const childPeng = list.filter(p => p.Tipe === 'Penghargaan').reduce((a, b) => a + Number(b.Poin||0), 0);
 
@@ -2729,7 +2886,7 @@
       }
 
       if (sortType === 'tgl-desc') list.sort((a,b) => safeString(b.Tanggal).localeCompare(safeString(a.Tanggal)));
-      if (sortType === 'tgl-asc') list.sort((a,b) => safeString(a.Tanggal).localeCompare(safeString(b.Tanggal)));
+      if (sortType === 'tgl-asc') list.sort((a,b) => safeString(a.Tanggal).localeCompare(safeString(a.Tanggal)));
       if (sortType === 'poin-desc') list.sort((a,b) => Number(b.Poin||0) - Number(a.Poin||0));
 
       const isReadOnly = currentUser && (currentUser.role === 'Pimpinan' || currentUser.role === 'Orang Tua');
@@ -2753,9 +2910,6 @@
             </td>
             <td class="p-4 text-right space-x-1 whitespace-nowrap">
               ${!isReadOnly ? `
-                <button onclick="openEditKedisiplinan('${d.ID}')" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg transition btn-press shadow-2xs">
-                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                </button>
                 <button onclick="askDeleteData('kedisiplinan', '${d.ID}', '${santri ? santri['Nama Lengkap'] : d.NIS}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition btn-press shadow-2xs">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
@@ -2826,9 +2980,6 @@
             <td class="p-4 text-slate-500 italic">${u['Diinput Oleh'] || '-'}</td>
             <td class="p-4 text-right space-x-1 whitespace-nowrap">
               ${!isReadOnly ? `
-                <button onclick="openEditKeuangan('${u['ID Transaksi'] || u.ID}')" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg transition btn-press shadow-2xs">
-                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                </button>
                 <button onclick="askDeleteData('keuangan', '${u['ID Transaksi'] || u.ID}', '${santri ? santri['Nama Lengkap'] : (u.NIS || 'Mutasi')}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition btn-press shadow-2xs">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
@@ -2915,8 +3066,7 @@
     }
 
     function openModalSantri(idx = null) {
-      resetModalForm('modal-santri');
-      toggleModal('modal-santri', true);
+      openFormPage('modal-santri');
 
       if (idx !== null && appData.santriList[idx]) {
         const s = appData.santriList[idx];
@@ -2958,27 +3108,6 @@
       }
     }
 
-    function openModalKedisiplinan() {
-      resetModalForm('modal-kedisiplinan');
-      toggleModal('modal-kedisiplinan', true);
-      document.getElementById('modal-disc-title').innerText = "Catat Kedisiplinan";
-      document.getElementById('m-disc-edit-id').value = "";
-    }
-
-    function openEditKedisiplinan(id) {
-      const d = appData.pelanggaranList.find(item => safeString(item.ID) === safeString(id));
-      if (!d) return;
-      openModalKedisiplinan();
-      document.getElementById('modal-disc-title').innerText = "Edit Catatan Kedisiplinan";
-      document.getElementById('m-disc-edit-id').value = d.ID;
-      setSelectValue('m-disc-nis', d.NIS);
-      document.getElementById('m-disc-tanggal').value = d.Tanggal;
-      setSelectValue('m-disc-tipe', d.Tipe);
-      document.getElementById('m-disc-kategori').value = d.Kategori;
-      document.getElementById('m-disc-poin').value = d.Poin;
-      document.getElementById('m-disc-ket').value = d.Keterangan;
-    }
-
     async function handleAddKedisiplinan(e) {
       e.preventDefault();
       showLoading("Memproses Data...", "Menyimpan catatan kedisiplinan");
@@ -3017,26 +3146,10 @@
     }
 
     function openModalUangJajan(defaultJenis = 'Setor') {
-      resetModalForm('modal-uang-jajan');
-      toggleModal('modal-uang-jajan', true);
+      openFormPage('modal-uang-jajan');
       document.getElementById('modal-uj-title').innerText = "Input Transaksi Uang Jajan";
       document.getElementById('m-uj-edit-id').value = "";
       setSelectValue('m-uj-jenis', defaultJenis);
-    }
-
-    function openEditKeuangan(id) {
-      const u = appData.uangJajanList.find(item => safeString(item['ID Transaksi'] || item.ID) === safeString(id));
-      if (!u) return;
-      openModalUangJajan();
-      document.getElementById('modal-uj-title').innerText = "Edit Transaksi Keuangan";
-      document.getElementById('m-uj-edit-id').value = u['ID Transaksi'] || u.ID;
-      setSelectValue('m-uj-nis', u.NIS);
-      autofillUangJajanDetails(u.NIS);
-      document.getElementById('m-uj-tanggal').value = u.Tanggal;
-      setSelectValue('m-uj-jenis', u['Jenis Transaksi']);
-      setSelectValue('m-uj-metode', u['Sumber/Metode']);
-      document.getElementById('m-uj-jumlah').value = (Number(u.Jumlah)||0).toLocaleString('id-ID');
-      setSelectValue('m-uj-ket-select', u.Keterangan);
     }
 
     async function handleAddUangJajan(e) {
@@ -3086,11 +3199,6 @@
       }
     }
 
-    function openModalMutasi() {
-      resetModalForm('modal-mutasi');
-      toggleModal('modal-mutasi', true);
-    }
-
     async function handleMutasi(e) {
       e.preventDefault();
       showLoading("Memproses Data...", "Mohon tunggu sebentar");
@@ -3120,40 +3228,6 @@
         refreshData();
       } catch (err) {
         showToast("Gagal Mutasi", String(err ? err.message || err : err), "error");
-      }
-    }
-
-    function openModalPerizinan() {
-      resetModalForm('modal-perizinan');
-      toggleModal('modal-perizinan', true);
-
-      const isWali = currentUser && currentUser.role === 'Orang Tua';
-
-      if (isWali) {
-        document.getElementById('modal-izn-title').innerText = "Ajukan Perizinan Ananda";
-        document.getElementById('m-izn-edit-id').value = "";
-        
-        document.getElementById('box-izn-nis-select')?.classList.add('hidden');
-        setSelectValue('m-izn-nis', currentUser.linkedNis);
-
-        document.querySelectorAll('#m-izn-kategori option.opt-admin-only').forEach(opt => {
-          opt.disabled = true;
-          opt.style.display = 'none';
-        });
-
-        setSelectValue('m-izn-kategori', 'Izin Datang Bertemu Santri');
-
-      } else {
-        document.getElementById('modal-izn-title').innerText = "Pengajuan Izin Santri";
-        document.getElementById('m-izn-edit-id').value = "";
-        document.getElementById('box-izn-nis-select')?.classList.remove('hidden');
-
-        document.querySelectorAll('#m-izn-kategori option.opt-admin-only').forEach(opt => {
-          opt.disabled = false;
-          opt.style.display = 'block';
-        });
-
-        setSelectValue('m-izn-kategori', 'Izin Keluar Pondok');
       }
     }
 
